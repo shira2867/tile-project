@@ -25,3 +25,22 @@ export async function createUser(req: Request, res: Response) {
     res.status(500).json({ error: "Server error" });
   }
 }
+export async function updateUserRole(req: Request, res: Response) {
+  try {
+    const { userId } = req.params; 
+    const { role } = req.body;    
+    if (!role) {
+       return res.status(400).json({ error: "Role is required" });
+    }
+    const updatedUser = await userService.updateUser(userId, { role });
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    console.log("User role updated:", updatedUser);
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error while updating role" });
+  }
+}
