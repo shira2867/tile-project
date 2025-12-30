@@ -3,11 +3,13 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import tileRoutes from './routes/tileRoute.js'; 
 import userRoutes from './routes/userRoute.js'; 
+import cookieParser from "cookie-parser";
 
 
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.use(cookieParser());
 
 app.use(express.json()); 
 app.use('/tiles', tileRoutes);
