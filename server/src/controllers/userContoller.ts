@@ -61,6 +61,7 @@ export async function login(req: Request, res: Response) {
     }
 
     const result = await userService.loginUser(email, password);
+    console.log('token',result.token)
     res.cookie("token", result.token, {
       httpOnly: true,
       secure: true,

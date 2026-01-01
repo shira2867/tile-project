@@ -5,7 +5,7 @@ import {authorizeRolesMiddleware} from "../middleware/authMiddleware.js";
 
 const router = express.Router(); 
 
-router.post("/signIn",register)
+router.post("/signUp",register)
 router.post("/login", login);
 
 router.use(authenticateTokenMiddleware)
