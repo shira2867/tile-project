@@ -32,10 +32,13 @@ export async function updateUserRole(req: Request, res: Response) {
     const { userId } = req.params;
     const { role } = req.body;
     if (!role) {
+      console.log('Role is required')
+
       return res.status(400).json({ error: "Role is required" });
     }
     const updatedUser = await userService.updateUser(userId, { role });
     if (!updatedUser) {
+      console.log('User not found')
       return res.status(404).json({ error: "User not found" });
     }
 

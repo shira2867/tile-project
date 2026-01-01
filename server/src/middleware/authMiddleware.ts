@@ -11,7 +11,7 @@ export function authenticateTokenMiddleware(
   next: NextFunction
 ) {
   const token = req.cookies?.token;
-      console.log("token :", req.headers.authorization); 
+      console.log("token :", token); 
   if (!token) {
     return res.status(401).json({ message: "No token provided" });
   }
@@ -24,6 +24,26 @@ export function authenticateTokenMiddleware(
     req.user = decoded; 
     next();
   });
+}
+
+
+
+
+
+export function authorizeRolesMiddleware(allowedRoles: string[]) {
+  return (req: AuthRequest, res: Response, next: NextFunction) => {
+    if (!req.user || typeof req.user === "string") {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const userRole = req.user.role;
+
+    if (!allowedRoles.includes(userRole)) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    next();
+  };
 }
 
 
