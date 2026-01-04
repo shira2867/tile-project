@@ -1,9 +1,9 @@
 import { useFormik } from "formik";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../api/auth";
-import { LoginSchema } from "../validation/authSchema";
-import type { LoginData } from "../types/user.types";
+import { loginUser } from "../../api/auth";
+import { LoginSchema } from "../../validation/authSchema";
+import type { LoginData } from "../../types/user.types";
 
 
 export default function LoginPage() {
@@ -11,7 +11,7 @@ export default function LoginPage() {
 
     const mutation = useMutation({
         mutationFn: loginUser,
-        onSuccess: (data) => {
+        onSuccess: () => {
             navigate("/signup");
         },
     });

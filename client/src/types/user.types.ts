@@ -9,3 +9,9 @@ export type SignUpData= {
   email: string;
   password: string;
 }
+export type User ={
+  _id: string;
+  name: string;
+  email: string;
+  role: 'admin' | 'moderator' | 'editor' | 'viewer';
+}

@@ -13,8 +13,10 @@ export async function getAllUser(): Promise<IUser[]> {
   return users;
 }
 
-export async function getTileById(id: string): Promise<IUser | null> {
-  return await User.findById(id);
+export async function getUserByRole(role:string): Promise<IUser[]> {
+ const users = await User.find({ role: role }); 
+  console.log(`Found ${users.length} users with role: ${role}`);
+  return users;
 }
 
 

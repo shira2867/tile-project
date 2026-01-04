@@ -1,17 +1,22 @@
 import './App.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import SignUpPage from './pages/SingUpPage'
-import LoginPage from './pages/LoginPage';
+import SignUpPage from '../src/pages/SignUpPage/SignUpPage'
+import LoginPage from '../src/pages/LoginPage/LoginPage';
+import { AdminPage } from './pages/AdminPage/AdminPage';
+import { FooterProvider } from './context/FooterContext';
 
 function App() {
   return (
+    <FooterProvider>
     <BrowserRouter>
       <Routes>
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/admin" element={<AdminPage />} />
 
       </Routes>
     </BrowserRouter>
+    </FooterProvider>
   );
 }
 
