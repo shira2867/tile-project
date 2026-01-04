@@ -1,9 +1,9 @@
 import { useFormik } from "formik";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { SignUpSchema } from "../validation/authSchema";
-import { signUpUser } from "../api/auth";
-import type { SignUpData } from "../types/user.types";
+import { SignUpSchema } from "../../validation/authSchema";
+import { signUpUser } from "../../api/auth";
+import type { SignUpData } from "../../types/user.types";
 
 
 export default function SignUpPage() {

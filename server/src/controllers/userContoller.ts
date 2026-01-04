@@ -13,7 +13,21 @@ export async function getUsers(req: Request, res: Response) {
     res.status(500).json({ error: "Server error" });
   }
 }
+export async function getUsersByRole(req: Request, res: Response) {
+  try {
+   
+    const { role } = req.params; 
 
+    if (!role) {
+      return res.status(400).json({ error: "Role parameter is missing" });
+    }
+
+    const users = await userService.getUserByRole(role);
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
+}
 export async function register(req: Request, res: Response) {
   try {
     const validatedData = createUserSchema.parse(req.body);
@@ -61,12 +75,12 @@ export async function login(req: Request, res: Response) {
     }
 
     const result = await userService.loginUser(email, password);
-    console.log('token',result.token)
+    console.log('token', result.token)
     res.cookie("token", result.token, {
       httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-      maxAge: 60 * 60 * 1000,
+      secure: false,
+      sameSite:  "lax",
+      maxAge: 60 * 60 * 1000 * 12,
     });
     return res.status(200).json({
       message: "Login successful",
