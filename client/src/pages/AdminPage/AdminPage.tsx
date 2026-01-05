@@ -6,7 +6,8 @@ import UserTable from "../../components/UserTable/UserTable";
 import { SidebarUser } from "../../components/Sidebar/Sidebar";
 import { useFooter } from "../../context/FooterContext"; 
 import Footer from "../../components/Footer/Footer";
-
+import Header from "../../components/Header/Header";
+import style from './AdminPage.module.css'
 export function AdminPage() {
   const queryClient = useQueryClient();
   const { setFooterActions } = useFooter();
@@ -70,13 +71,20 @@ export function AdminPage() {
   };
 
   return (
+    <>
+    <Header></Header>
     <div style={{ display: 'flex' }}>
       <SidebarUser
         selectedRole={selectedRole}
         onRoleSelect={setSelectedRole}
       />
 
-      <div className="users-table" style={{ flex: 1, padding: '20px' }}>
+      <div className={style.userTable} style={{ flex: 1, padding: '20px' }}>
+        <div className={style.tableHeader}>
+        <span>name</span>
+        <span>email</span>
+        <span>role</span>
+      </div>
         {isLoading ? (
           <div>טוען משתמשים...</div>
         ) : isError ? (
@@ -96,6 +104,6 @@ export function AdminPage() {
       </div>
    <Footer/>
     </div>
-
+</>
   );
 }

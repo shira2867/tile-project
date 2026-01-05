@@ -4,17 +4,31 @@ import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../api/auth";
 import { LoginSchema } from "../../validation/authSchema";
 import type { LoginData } from "../../types/user.types";
-
+import {getUsersByEmail} from "../../api/user"
+import { useUser } from "../../context/UserContext";
 
 export default function LoginPage() {
     const navigate = useNavigate();
-
+      const userContext = useUser();
+    
     const mutation = useMutation({
-        mutationFn: loginUser,
-        onSuccess: () => {
-            navigate("/signup");
-        },
-    });
+  mutationFn: loginUser,
+  onSuccess: async (data, variables) => {
+    const email = variables.email; 
+    console.log("email",email)
+    try {
+      const userResponse = await getUsersByEmail(email);
+      const name=userResponse[0].name;
+      const role=userResponse[0].role;
+      userContext.setName(name)
+      userContext.setRole(role)
+      navigate("/admin"); 
+    } catch (err) {
+      console.error("Error fetching user:", err);
+    }
+  },
+});
+
 
     const formik = useFormik<LoginData>({
         initialValues: { email: "", password: "" },
@@ -31,6 +45,7 @@ export default function LoginPage() {
             return {};
         },
         onSubmit: (values) => {
+              console.log("Submitting login with:", values);
             mutation.mutate(values);
         },
     });

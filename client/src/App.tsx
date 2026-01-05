@@ -4,19 +4,22 @@ import SignUpPage from '../src/pages/SignUpPage/SignUpPage'
 import LoginPage from '../src/pages/LoginPage/LoginPage';
 import { AdminPage } from './pages/AdminPage/AdminPage';
 import { FooterProvider } from './context/FooterContext';
+import { UserProvider } from './context/UserContext';
 
 function App() {
   return (
-    <FooterProvider>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/admin" element={<AdminPage />} />
+    <UserProvider>
+      <FooterProvider>
+       <BrowserRouter>
+          <Routes>
+           <Route path="/signup" element={<SignUpPage />} />
+           <Route path="/login" element={<LoginPage />} />
+           <Route path="/admin" element={<AdminPage />} />
 
-      </Routes>
-    </BrowserRouter>
-    </FooterProvider>
+          </Routes>
+       </BrowserRouter>
+     </FooterProvider>
+   </UserProvider>
   );
 }
 

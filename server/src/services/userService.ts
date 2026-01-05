@@ -13,6 +13,14 @@ export async function getAllUser(): Promise<IUser[]> {
   return users;
 }
 
+
+export async function getUserByEmail(email:string): Promise<IUser[]> {
+ const user = await User.find({ email: email }); 
+  return user;
+}
+
+
+
 export async function getUserByRole(role:string): Promise<IUser[]> {
  const users = await User.find({ role: role }); 
   console.log(`Found ${users.length} users with role: ${role}`);
