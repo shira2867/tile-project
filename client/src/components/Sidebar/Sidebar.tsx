@@ -1,4 +1,4 @@
-
+import style from './Sidebar.module.css'
 const ROLES = ["all users", "admin", "moderator", "editor", "viewer"];
 
 interface SidebarProps {
@@ -8,12 +8,12 @@ interface SidebarProps {
 
 export const SidebarUser = ({ selectedRole, onRoleSelect }: SidebarProps) => {
   return (
-    <aside className="sidebar">
+    <aside className={style.sidebar}>
       {ROLES.map((role) => (
         <button
           key={role}
-          className={`sidebar-item ${selectedRole === role ? "active" : ""}`}
-          onClick={() => onRoleSelect(role)} 
+          className={`${style.sidebarItem} ${selectedRole === role ? style.active : ""}`}
+          onClick={() => onRoleSelect(role)}
         >
           {role}
         </button>

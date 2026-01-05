@@ -28,6 +28,24 @@ export async function getUsersByRole(req: Request, res: Response) {
     res.status(500).json({ error: "Server error" });
   }
 }
+
+export async function getUsersByEmail(req: Request, res: Response) {
+  try {
+    const email = req.query.email as string; 
+    if (!email) return res.status(400).json({ error: "email parameter is missing" });
+
+    const users = await userService.getUserByEmail(email);
+    if (!users || users.length === 0) return res.status(404).json({ error: "User not found" });
+
+    res.json(users);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+}
+
+
+
 export async function register(req: Request, res: Response) {
   try {
     const validatedData = createUserSchema.parse(req.body);

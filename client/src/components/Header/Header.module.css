@@ -1,0 +1,72 @@
+.header {
+    width: 100%;
+    height: 72px;
+    background-color: #90AACB;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+}
+
+.details {
+    width: 205px;
+    height: 100%;
+    background-color: #607998;
+    display: flex;
+    align-items: center; 
+    padding: 0 15px;
+    gap: 15px; 
+}
+
+.textWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.name {
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+    font-family: 'Assistant';
+    margin: 0;
+}
+
+.role {
+    color: #e0e0e0; 
+    font-size: 16px;
+    font-family: 'Assistant';
+    margin: 0;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border-radius: 50%; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rightIcons {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.icon1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    height: 100%;
+}
+
+.icon2 {
+    width: 72px;
+    height: 100%;
+    background-color: #607998;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
