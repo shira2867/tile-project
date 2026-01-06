@@ -4,11 +4,16 @@ import { useNavigate } from "react-router-dom";
 import { SignUpSchema } from "../../validation/authSchema";
 import { signUpUser } from "../../api/auth";
 import type { SignUpData } from "../../types/user.types";
-
-
+import style from './SignUpPage.module.css'
+import { FiEye, FiEyeOff } from "react-icons/fi";
+import { useState } from "react";
 export default function SignUpPage() {
   const navigate = useNavigate();
+const [showPassword, setShowPassword] = useState(false);
 
+    const handleToggle = () => {
+        setShowPassword(prev => !prev);
+    };
   const mutation = useMutation({
     mutationFn: signUpUser,
     onSuccess: () => {
@@ -16,24 +21,24 @@ export default function SignUpPage() {
     },
   });
 
- const formik = useFormik<SignUpData>({
+  const formik = useFormik<SignUpData>({
     initialValues: { name: "", email: "", password: "" },
     validate: (values) => {
       const result = SignUpSchema.safeParse(values);
-      
+
       if (!result.success) {
         const errors: Record<string, string> = {};
-        
+
         result.error.issues.forEach((issue) => {
           const fieldName = issue.path[0] as string;
           if (!errors[fieldName]) {
             errors[fieldName] = issue.message;
           }
         });
-        
+
         return errors;
       }
-      
+
       return {};
     },
     onSubmit: (values) => {
@@ -41,19 +46,20 @@ export default function SignUpPage() {
     },
   });
 
-  const serverErrorMessage = (mutation.error as any)?.response?.data?.message 
+  const serverErrorMessage = (mutation.error as any)?.response?.data?.message
     || mutation.error?.message;
 
   return (
-    <div>
-      <h1>Sign Up</h1>
-      <form onSubmit={formik.handleSubmit}>
-        
+        <div className={style.containerForm}>
+      <form className={style.form} onSubmit={formik.handleSubmit}>
+        <div className={style.img}>
+          <img src="../../../public/user (1).png" alt="user" style={{ width: '80px' }} />
+        </div>
         <div>
           <label>Username</label>
           <input
             type="text"
-            {...formik.getFieldProps("name")} 
+            {...formik.getFieldProps("name")}
           />
           {formik.touched.name && formik.errors.name && (
             <p style={{ color: "red" }}>{formik.errors.name}</p>
@@ -71,24 +77,40 @@ export default function SignUpPage() {
           )}
         </div>
 
-        <div>
-          <label>Password</label>
-          <input
-            type="password"
-            {...formik.getFieldProps("password")}
-          />
-          {formik.touched.password && formik.errors.password && (
-            <p style={{ color: "red" }}>{formik.errors.password}</p>
-          )}
-        </div>
+       <div>
+                    <label>Password</label>
+                    <div className={style.passwordWrapper} style={{ position: 'relative' }}>
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            {...formik.getFieldProps("password")}
+                        />
+                        <span
+                            onClick={handleToggle}
+                             className={style.iconEye}
+                        >
+                            {showPassword ? <FiEye size={20} /> : <FiEyeOff size={20} />}
+                        </span>
+                    </div>
+                    {formik.touched.password && formik.errors.password && (
+                        <p style={{ color: "red" }}>{formik.errors.password}</p>
+                    )}
+                </div>
 
         {mutation.isError && (
           <p style={{ color: "orange" }}>{serverErrorMessage}</p>
         )}
+        <div className={style.bottuns}>
 
-        <button type="submit" disabled={mutation.isPending}>
-          {mutation.isPending ? "Signing up..." : "Sign Up"}
-        </button>
+          <button className={style.submit}  type="submit" disabled={mutation.isPending}>
+            {mutation.isPending ? "Signing up..." : "Sign Up"}
+          </button>
+          <button className={style.bottun}
+            type="button"
+            onClick={() => navigate("/login")}
+          >
+            LOGIN
+          </button>
+        </div>
       </form>
     </div>
   );

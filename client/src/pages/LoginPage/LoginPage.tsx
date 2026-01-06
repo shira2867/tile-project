@@ -4,31 +4,42 @@ import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../api/auth";
 import { LoginSchema } from "../../validation/authSchema";
 import type { LoginData } from "../../types/user.types";
-import {getUsersByEmail} from "../../api/user"
+import { getUsersByEmail } from "../../api/user";
 import { useUser } from "../../context/UserContext";
+import style from './LoginPage.module.css';
+
+import { FiEye, FiEyeOff } from "react-icons/fi";
+import { useState } from "react";
 
 export default function LoginPage() {
     const navigate = useNavigate();
-      const userContext = useUser();
-    
-    const mutation = useMutation({
-  mutationFn: loginUser,
-  onSuccess: async (data, variables) => {
-    const email = variables.email; 
-    console.log("email",email)
-    try {
-      const userResponse = await getUsersByEmail(email);
-      const name=userResponse[0].name;
-      const role=userResponse[0].role;
-      userContext.setName(name)
-      userContext.setRole(role)
-      navigate("/admin"); 
-    } catch (err) {
-      console.error("Error fetching user:", err);
-    }
-  },
-});
+    const userContext = useUser();
 
+    const [showPassword, setShowPassword] = useState(false);
+
+    const handleToggle = () => {
+        setShowPassword(prev => !prev);
+    };
+
+    const mutation = useMutation({
+        mutationFn: loginUser,
+        onSuccess: async (data, variables) => {
+            const email = variables.email;
+            try {
+                const userResponse = await getUsersByEmail(email);
+                const name = userResponse[0].name;
+                const role = userResponse[0].role;
+                const _id=userResponse[0]._id
+                userContext.setName(name);
+                userContext.setRole(role);
+                userContext.setId(_id);
+
+                navigate("/tiles");
+            } catch (err) {
+                console.error("Error fetching user:", err);
+            }
+        },
+    });
 
     const formik = useFormik<LoginData>({
         initialValues: { email: "", password: "" },
@@ -45,7 +56,6 @@ export default function LoginPage() {
             return {};
         },
         onSubmit: (values) => {
-              console.log("Submitting login with:", values);
             mutation.mutate(values);
         },
     });
@@ -54,9 +64,12 @@ export default function LoginPage() {
         || mutation.error?.message;
 
     return (
-        <div>
-            <h1>Login</h1>
-            <form onSubmit={formik.handleSubmit}>
+        <div className={style.containerForm}>
+            <form className={style.form} onSubmit={formik.handleSubmit}>
+                <div className={style.img}>
+                    <img src="../../../public/user (1).png" alt="user" style={{ width: '80px' }} />
+                </div>
+
                 <div>
                     <label>Email</label>
                     <input type="email" {...formik.getFieldProps("email")} />
@@ -67,7 +80,18 @@ export default function LoginPage() {
 
                 <div>
                     <label>Password</label>
-                    <input type="password" {...formik.getFieldProps("password")} />
+                    <div className={style.passwordWrapper} style={{ position: 'relative' }}>
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            {...formik.getFieldProps("password")}
+                        />
+                        <span
+                            onClick={handleToggle}
+                             className={style.iconEye}
+                        >
+                            {showPassword ? <FiEye size={20} /> : <FiEyeOff size={20} />}
+                        </span>
+                    </div>
                     {formik.touched.password && formik.errors.password && (
                         <p style={{ color: "red" }}>{formik.errors.password}</p>
                     )}
@@ -76,10 +100,18 @@ export default function LoginPage() {
                 {mutation.isError && (
                     <p style={{ color: "orange" }}>{serverErrorMessage}</p>
                 )}
-
-                <button type="submit" disabled={mutation.isPending}>
-                    {mutation.isPending ? "Logging in..." : "Login"}
-                </button>
+                <div className={style.bottuns}>
+                    <button className={style.submit} type="submit" disabled={mutation.isPending}>
+                        {mutation.isPending ? "Logging in..." : "LOGIN"}
+                    </button>
+                    
+                    <button className={style.bottun}
+                        type="button"
+                        onClick={() => navigate("/tiles")}
+                    >
+                        SIGNUP
+                    </button>
+                </div>
             </form>
         </div>
     );

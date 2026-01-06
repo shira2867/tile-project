@@ -4,9 +4,10 @@ import style from './UserTable.module.css'
 interface UserTableProps {
   user: User;
   onRoleChange: (userId: string, newRole: User['role']) => void;
+  disableRoleChange?: boolean; 
 }
 
-const UserTable: React.FC<UserTableProps> = ({ user, onRoleChange }) => {
+const UserTable: React.FC<UserTableProps> = ({ user, onRoleChange,disableRoleChange }) => {
   return (
     
       <div className={style.usertable}>
@@ -21,6 +22,8 @@ const UserTable: React.FC<UserTableProps> = ({ user, onRoleChange }) => {
         <div className={style.cellrole}>
           <select
             value={user.role}
+            disabled={disableRoleChange}
+
             onChange={(e) => onRoleChange(user._id, e.target.value as User['role'])}
           >
             <option value="admin">Admin</option>
@@ -28,6 +31,8 @@ const UserTable: React.FC<UserTableProps> = ({ user, onRoleChange }) => {
             <option value="editor">Editor</option>
             <option value="viewer">Viewer</option>
           </select>
+
+
         </div>
       </div>
   );

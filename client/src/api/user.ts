@@ -4,7 +4,6 @@ import type { User } from "../types/user.types";
 const BASE_URL = "http://localhost:3000/users";
 
 
-
 export const getAllUser = async ():Promise<User[]> => {
     const res = await axios.get(`${BASE_URL}/getAllUser`, {
         withCredentials: true,
