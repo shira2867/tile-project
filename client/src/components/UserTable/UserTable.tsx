@@ -8,7 +8,6 @@ interface UserTableProps {
 
 const UserTable: React.FC<UserTableProps> = ({ user, onRoleChange }) => {
   return (
-    <div className={style.tableContainer}>
     
       <div className={style.usertable}>
         <div className={style.cellname}>
@@ -31,7 +30,6 @@ const UserTable: React.FC<UserTableProps> = ({ user, onRoleChange }) => {
           </select>
         </div>
       </div>
-    </div>
   );
 };
 

@@ -71,39 +71,48 @@ export function AdminPage() {
   };
 
   return (
-    <>
-    <Header></Header>
-    <div style={{ display: 'flex' }}>
-      <SidebarUser
-        selectedRole={selectedRole}
-        onRoleSelect={setSelectedRole}
-      />
+  <>
+    <Header />
+    <div className={style.pageWrapper}> 
+      <div className={style.mainContent}> 
+        
+        <SidebarUser
+          selectedRole={selectedRole}
+          onRoleSelect={setSelectedRole}
+        />
 
-      <div className={style.userTable} style={{ flex: 1, padding: '20px' }}>
-        <div className={style.tableHeader}>
-        <span>name</span>
-        <span>email</span>
-        <span>role</span>
-      </div>
-        {isLoading ? (
-          <div>טוען משתמשים...</div>
-        ) : isError ? (
-          <div>אירעה שגיאה בטעינת המשתמשים</div>
-        ) : (
-          users.map((user) => {
-            const displayUser = pendingChanges[user._id] || user;
-            return (
-              <UserTable
-                key={user._id}
-                user={displayUser}
-                onRoleChange={handleRoleChange}
-              />
-            );
-          })
-        )}
-      </div>
-   <Footer/>
+          <div className={style.tableContainer}>
+
+          <div className={style.tableHeader}>
+            <span className={style.headerCell}>USER</span>
+            <span className={style.headerCell}>EMAIL</span>
+            <span className={style.headerCell}>ROLE</span>
+          </div>
+          <div className={style.containerUser}>
+          {isLoading ? (
+            <div>טוען משתמשים...</div>
+          ) : isError ? (
+            <div>אירעה שגיאה בטעינת המשתמשים</div>
+          ) : (
+            
+            users.map((user) => {
+              const displayUser = pendingChanges[user._id] || user;
+              return (
+                <UserTable
+                  key={user._id}
+                  user={displayUser}
+                  onRoleChange={handleRoleChange}
+                />
+              );
+            })
+          )}
+          </div>
+
+        </div>
+        </div>
+
     </div>
-</>
-  );
+    <Footer />
+  </>
+);
 }
