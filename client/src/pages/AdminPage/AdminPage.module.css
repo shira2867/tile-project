@@ -1,10 +1,91 @@
-.userTable{
-     width: 500px; 
-     background-color: white;
+.pageWrapper {
+  display: flex;
+  justify-content: center; 
+  width: 100%;
 }
-.tableHeader{
-   width: 500px; 
-    height: 60px;
-    background-color:#607998 ;
-    
+
+.mainContent {
+  display: flex;
+  width: 66.66%;
+  max-width: 1200px;
+  padding: 110px 0;
+  height: 580px; 
+  position: relative; 
+}
+
+
+.tableContainer {
+  flex: 1;
+  background-color: white;
+  border: white 10px solid;
+  border-radius: 22px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 2;          
+  margin-left: -20px; 
+}
+
+.containerUser {
+  background-color: #ECF4FF;
+  padding: 36px;
+  flex: 1; 
+  max-height: 400px;     
+  overflow-y: auto;      
+  overflow-x: hidden;            
+}
+
+
+.tableHeader {
+
+  display: flex;
+  background-color: #90AACB;
+  padding: 10px;
+  font-weight: 600;
+  color: white;
+  font-family:Arial, sans-serif;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.headerCell {
+
+  flex: 1;
+  text-align: left; 
+}
+
+.usertable {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 12px 20px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.cellname, .cellemail, .cellrole {
+  flex: 1;
+}
+
+.cellrole select {
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background-color: white;
+  width: 120px; 
+}
+
+
+@media (max-width: 1024px) {
+  .mainContent {
+    width: 90%;
+  }
+}
+
+@media (max-width: 768px) {
+  .mainContent {
+    flex-direction: column; 
+    width: 95%;
+  }
 }

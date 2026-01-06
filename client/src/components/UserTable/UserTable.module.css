@@ -1,6 +1,27 @@
-.tableContainer{
-    width: 500px; 
-    height: 500px;
-    background-color: white;
 
+
+
+.usertable {
+    
+  display: flex;              
+  align-items: center;       
+  background-color: #90AACB;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  color: white;
+  font-family:Arial, sans-serif;
+
+}
+
+.cellname,
+.cellemail,
+.cellrole {
+  flex: 1;                   
+}
+
+.cellrole select {
+  padding: 4px 6px;
+  border-radius: 4px;
+  border: none;
 }
