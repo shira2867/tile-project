@@ -11,12 +11,16 @@ export const useUser = () => {
   return contextUser;
 };
 export const UserProvider = ({ children }: UserProviderProps) => {
+ ;
  const [name, setName] = useState("user");
  const [role, setRole] = useState<"viewer" | "editor" | "moderator" | "admin">("viewer");
- 
+  const [_id, setId] = useState(" ");
+
 
    return (
-    <UserContext.Provider value={{ name,role,setName,setRole }}>
+    <UserContext.Provider value={{_id, name,role,setId,setName,setRole,
+      
+     }}>
       {children}
     </UserContext.Provider>
   );

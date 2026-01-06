@@ -5,6 +5,7 @@ import LoginPage from '../src/pages/LoginPage/LoginPage';
 import { AdminPage } from './pages/AdminPage/AdminPage';
 import { FooterProvider } from './context/FooterContext';
 import { UserProvider } from './context/UserContext';
+import { TilePage } from './pages/TilesPage/TilesPage';
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
            <Route path="/signup" element={<SignUpPage />} />
            <Route path="/login" element={<LoginPage />} />
            <Route path="/admin" element={<AdminPage />} />
-
+           <Route path="/tiles" element={<TilePage />} />
           </Routes>
        </BrowserRouter>
      </FooterProvider>

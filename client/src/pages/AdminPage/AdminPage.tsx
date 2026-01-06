@@ -7,14 +7,16 @@ import { SidebarUser } from "../../components/Sidebar/Sidebar";
 import { useFooter } from "../../context/FooterContext"; 
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
+import { UserContext, useUser } from '../../context/UserContext';
 import style from './AdminPage.module.css'
+
 export function AdminPage() {
   const queryClient = useQueryClient();
   const { setFooterActions } = useFooter();
   
   const [selectedRole, setSelectedRole] = useState("all users");
   const [pendingChanges, setPendingChanges] = useState<Record<string, User>>({});
-
+  const currentUser=useUser()
   const {
     data: users = [],
     isLoading,
@@ -97,11 +99,18 @@ export function AdminPage() {
             
             users.map((user) => {
               const displayUser = pendingChanges[user._id] || user;
+              const isSelf = user._id === currentUser._id;
+              console.log("user._id ",user._id )
+              console.log("currentUser._id",currentUser._id)
+              console.log("isSelf",isSelf)
+
               return (
                 <UserTable
                   key={user._id}
                   user={displayUser}
                   onRoleChange={handleRoleChange}
+                  disableRoleChange={isSelf}
+
                 />
               );
             })
