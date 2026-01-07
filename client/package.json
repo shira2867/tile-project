@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@dicebear/collection": "^9.2.4",
+    "@dicebear/converter": "^9.2.4",
+    "@dicebear/core": "^9.2.4",
     "@tanstack/react-query": "^5.90.16",
     "axios": "^1.13.2",
     "formik": "^2.4.9",

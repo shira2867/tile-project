@@ -65,3 +65,14 @@ export async function deleteTile(req: Request, res: Response) {
     res.status(500).json({ error: "Server error delete tile" });
   }
 }
+
+
+export const getColorEnum = (req: Request, res: Response) => {
+  try {
+    const colors = tileService.getColorEnum();
+    res.json(colors);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error fetching colors" });
+  }
+};

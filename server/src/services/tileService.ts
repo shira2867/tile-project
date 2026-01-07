@@ -1,6 +1,7 @@
 import { Tile } from "../models/tile.js"; 
 import type { ITile } from "../models/tile.js"; 
 
+
 export async function getAllTiles(): Promise<ITile[]> {
  const tiles=await Tile.find();
  console.log(tiles)
@@ -22,4 +23,8 @@ export async function updateTile(id: string, data: { color: string }): Promise<I
 
 export async function deleteTile(id: string): Promise<ITile | null> {
   return await Tile.findByIdAndDelete(id);
+}
+export function getColorEnum(): string[] {
+  const colors = (Tile.schema.paths.color as any).enumValues;
+  return colors;
 }
