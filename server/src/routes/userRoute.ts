@@ -14,6 +14,6 @@ router.put("/updateRole/:userId",authorizeRolesMiddleware(["admin"]), updateUser
 router.get("/getUserByRole/:role",authorizeRolesMiddleware(["admin"]), getUsersByRole);
 router.get("/getUserByEmail",authorizeRolesMiddleware(['admin','moderator','editor','viewer']), getUsersByEmail);
 
-
+// router.get('/me', getCurrentUser);
 
 export default router;

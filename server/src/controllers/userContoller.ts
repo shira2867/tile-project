@@ -114,3 +114,20 @@ export async function login(req: Request, res: Response) {
     return res.status(statusCode).json({ message: errorMessage });
   }
 }
+
+
+// export async function getCurrentUser (req:Request, res:Response)  {
+//     try {
+//         const token = req.cookies.token;
+
+//         if (!token) {
+//             return res.status(401).json({ message: "לא נמצא משתמש מחובר" });
+//         }
+
+//         const userData = await userService.verifyAndFetchUser(token);
+
+//         res.status(200).json(userData);
+//     } catch (error) {
+//         res.status(401).json({ message: "התחברות לא זמינה" });
+//     }
+// };

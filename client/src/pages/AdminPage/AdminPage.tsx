@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getAllUser, getUsersByRole, updateUserRole } from "../../api/user"; 
 import type { User } from '../../types/user.types';
@@ -7,16 +7,17 @@ import { SidebarUser } from "../../components/Sidebar/Sidebar";
 import { useFooter } from "../../context/FooterContext"; 
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
-import { UserContext, useUser } from '../../context/UserContext';
+import { useUser } from '../../context/UserContext';
 import style from './AdminPage.module.css'
 
 export function AdminPage() {
   const queryClient = useQueryClient();
   const { setFooterActions } = useFooter();
+  const currentUser = useUser();
   
   const [selectedRole, setSelectedRole] = useState("all users");
   const [pendingChanges, setPendingChanges] = useState<Record<string, User>>({});
-  const currentUser=useUser()
+
   const {
     data: users = [],
     isLoading,
@@ -52,15 +53,19 @@ export function AdminPage() {
     mutate(changesToSave);
   }, [pendingChanges, mutate]);
 
+  const handleUndo = useCallback(() => {
+    setPendingChanges({});
+  }, []);
+
   useEffect(() => {
     setFooterActions({
       onSave: handleSave,
-      onUndo: () => setPendingChanges({}), 
+      onUndo: handleUndo, 
       disabled: Object.keys(pendingChanges).length === 0 || isPending, 
     });
 
     return () => setFooterActions({ onSave: null, onUndo: null, disabled: false });
-  }, [pendingChanges, isPending, handleSave, setFooterActions]);
+  }, [pendingChanges, isPending, handleSave, handleUndo, setFooterActions]);
 
   const handleRoleChange = (userId: string, newRole: User["role"]) => {
     const originalUser = users.find(u => u._id === userId);
@@ -73,55 +78,48 @@ export function AdminPage() {
   };
 
   return (
-  <>
-    <Header />
-    <div className={style.pageWrapper}> 
-      <div className={style.mainContent}> 
-        
-        <SidebarUser
-          selectedRole={selectedRole}
-          onRoleSelect={setSelectedRole}
-        />
+    <>
+      <Header />
+      <div className={style.pageWrapper}> 
+        <div className={style.mainContent}> 
+          
+          <SidebarUser
+            selectedRole={selectedRole}
+            onRoleSelect={setSelectedRole}
+          />
 
           <div className={style.tableContainer}>
-
-          <div className={style.tableHeader}>
-            <span className={style.headerCell}>USER</span>
-            <span className={style.headerCell}>EMAIL</span>
-            <span className={style.headerCell}>ROLE</span>
-          </div>
-          <div className={style.containerUser}>
-          {isLoading ? (
-            <div>טוען משתמשים...</div>
-          ) : isError ? (
-            <div>אירעה שגיאה בטעינת המשתמשים</div>
-          ) : (
+            <div className={style.tableHeader}>
+              <span className={style.headerCell}>USER</span>
+              <span className={style.headerCell}>EMAIL</span>
+              <span className={style.headerCell}>ROLE</span>
+            </div>
             
-            users.map((user) => {
-              const displayUser = pendingChanges[user._id] || user;
-              const isSelf = user._id === currentUser._id;
-              console.log("user._id ",user._id )
-              console.log("currentUser._id",currentUser._id)
-              console.log("isSelf",isSelf)
+            <div className={style.containerUser}>
+              {isLoading ? (
+                <div>טוען משתמשים...</div>
+              ) : isError ? (
+                <div>אירעה שגיאה בטעינת המשתמשים</div>
+              ) : (
+                users.map((user) => {
+                  const displayUser = pendingChanges[user._id] || user;
+                  const isSelf = user._id === currentUser?._id;
 
-              return (
-                <UserTable
-                  key={user._id}
-                  user={displayUser}
-                  onRoleChange={handleRoleChange}
-                  disableRoleChange={isSelf}
-
-                />
-              );
-            })
-          )}
+                  return (
+                    <UserTable
+                      key={user._id}
+                      user={displayUser}
+                      onRoleChange={handleRoleChange}
+                      disableRoleChange={isSelf}
+                    />
+                  );
+                })
+              )}
+            </div>
           </div>
-
         </div>
-        </div>
-
-    </div>
-    <Footer />
-  </>
-);
+      </div>
+      <Footer />
+    </>
+  );
 }

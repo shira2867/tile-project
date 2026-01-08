@@ -7,14 +7,14 @@ import style from "./TilePage.module.css"
 import { useUser } from "../../context/UserContext";
 import { useFooter } from "../../context/FooterContext";
 
-import type { Tile } from "../../types/tile.type";
-import { getAllTiles, getColors, updateTileColor, deleteTile } from "../../api/tiles";
+import type { Tile, CreateTile } from "../../types/tile.type";
+import { getAllTiles, getColors, updateTileColor, deleteTile, createTile } from "../../api/tiles";
 import { permissions } from "../../constants/permissions";
 import { TileComponent } from "../../components/Tile/Tile"
-    //לכולם יכולים לצפות בצבעים
-    //לeditor יכול לצפות ולשנות צבעים
-    //admin & moderator יכול לצפות לשנות ליצור ולמחוק
-    //פונקצית create
+//לכולם יכולים לצפות בצבעים
+//לeditor יכול לצפות ולשנות צבעים
+//admin & moderator יכול לצפות לשנות ליצור ולמחוק
+//פונקצית create
 export function TilePage() {
     const queryClient = useQueryClient();
     const userContext = useUser();
@@ -22,8 +22,10 @@ export function TilePage() {
 
     const role = userContext.role;
     const perms = permissions[role] || permissions.viewer;
+    const [selectedColor, setSelectedColor] = useState<string>("");
 
-    const [pendingChanges, setPendingChanges] = useState<Record<string, Tile>>({});
+    type PendingTile = Partial<Tile> & { isNew?: boolean; toDelete?: boolean };
+    const [pendingChanges, setPendingChanges] = useState<Record<string, PendingTile>>({});
 
     const {
         data: colors = [],
@@ -31,7 +33,6 @@ export function TilePage() {
         queryKey: ["colors"],
         queryFn: getColors,
     });
-
 
 
     const {
@@ -44,7 +45,7 @@ export function TilePage() {
     });
 
 
-    const { mutate, isPending } = useMutation({
+    const updateMutation = useMutation({
         mutationFn: async (changes: Tile[]) => {
             return Promise.all(changes.map(tile => updateTileColor(tile._id, tile.color)));
         },
@@ -59,7 +60,22 @@ export function TilePage() {
         }
     });
 
+    const createTileMutation = useMutation({
+        mutationFn: (newTile: CreateTile) => createTile(newTile)
+        ,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["tiles"] });
+            setPendingChanges({});
+            alert("האריח נוצר בהצלחה!");
+        },
+        onError: (error) => {
+            console.error("Save failed:", error);
+            alert("אירעה שגיאה ביצירת האריח ");
+        }
+    });
+
     const deleteMutation = useMutation({
+
         mutationFn: (id: string) => deleteTile(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["tiles"] });
@@ -72,61 +88,129 @@ export function TilePage() {
     });
 
 
-    const handleChangeColor = (id: string, newColor: string) => {
+    const handleChangeColor = useCallback((id: string, newColor: string) => {
         setPendingChanges(prev => ({
             ...prev,
             [id]: { ...tiles.find(t => t._id === id)!, color: newColor }
         }));
-    };
+    }, [tiles]);
 
-    const handleDelete = (id: string) => {
+    const handleDelete = useCallback((id: string) => {
         setPendingChanges(prev => ({
             ...prev,
-            [id]: { ...tiles.find(t => t._id === id)!,
-            toDelete: true
-           }
+            [id]: { ...tiles.find(t => t._id === id)!, toDelete: true }
         }));
-        
+    }, [tiles]);
+
+
+    const handleCreateTile = () => {
+        if (!selectedColor) return;
+
+        const tempId = "temp-" + Date.now();
+        setPendingChanges(prev => ({
+            ...prev,
+            [tempId]: {
+                _id: tempId,
+                color: selectedColor,
+                isNew: true
+            }
+        }));
     };
 
+    const handleUndo = useCallback(() => {
+        setPendingChanges({});
+    }, []);
 
- const handleSaveTiles = useCallback(() => {
-    const changesToSave = Object.values(pendingChanges);
-    if (changesToSave.length === 0) return;
 
-    const updates = changesToSave.filter(c => !c.toDelete); 
-    const deletions = changesToSave.filter(c => c.toDelete);
-    if (updates.length > 0) {
-        mutate(updates); 
-    }
+    const handleSaveTiles = useCallback(() => {
+        const changesToSave = Object.values(pendingChanges);
+        if (changesToSave.length === 0) return;
 
-    deletions.forEach(tile => deleteMutation.mutate(tile._id)); 
+        const creations = changesToSave.filter(c => c.isNew);
+        const updates = changesToSave.filter(c => !c.isNew && !c.toDelete);
+        const deletions = changesToSave.filter(c => c.toDelete);
 
-}, [pendingChanges, mutate, deleteMutation]);
+        creations.forEach(tile =>
+            createTileMutation.mutate({ color: tile.color! })
+        );
+
+        if (updates.length > 0) updateMutation.mutate(updates as Tile[]);
+
+        deletions.forEach(tile => deleteMutation.mutate(tile._id!));
+
+        setPendingChanges({});
+    }, [pendingChanges]);
+
+
 
 
     useEffect(() => {
         setFooterActions({
             onSave: handleSaveTiles,
-            onUndo: () => setPendingChanges({}),
-            disabled: Object.keys(pendingChanges).length === 0 || isPending
+            onUndo: handleUndo,
+            disabled:
+                Object.keys(pendingChanges).length === 0 ||
+                deleteMutation.isPending ||
+                updateMutation.isPending || createTileMutation.isPending
         });
-
-        return () => setFooterActions({ onSave: null, onUndo: null, disabled: false });
-    }, [pendingChanges, isPending, handleSaveTiles, setFooterActions]);
-
+    }, [
+        pendingChanges,
+        handleSaveTiles,
+        handleUndo,
+        deleteMutation.isPending,
+        updateMutation.isPending,
+        createTileMutation.isPending
+    ]);
 
 
     return (
         <>
             <Header />
-
+           {perms.create && (
+    <div className={style.createTileDiv}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+            {colors.map((c) => (
+                <button className={style.colorButton}
+                    key={c}
+                    onClick={() => setSelectedColor(c)}
+                    style={{
+                        width: "36px",
+                        height: "36px",
+                        backgroundColor: c,
+                        borderRadius: "4px",
+                        border: selectedColor === c ? "3px solid #000" : "1px solid #ccc",
+                        cursor: "pointer",
+                        transition: "transform 0.1s",
+                        outline: "none"
+                    }}
+                    title={c}
+                    type="button"
+                />
+            ))}
+        </div>
+        
+        <button 
+            onClick={handleCreateTile} 
+            style={{ 
+                padding: "8px 16px",
+                backgroundColor: "#007bff",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                fontWeight: "bold"
+            }}
+        >
+        </button>
+    </div>
+)}
             {isLoading ? (
                 <div>טוען...</div>
             ) : isError ? (
                 <div>אירעה שגיאה</div>
             ) : (
-                <div className="tiles-container">
+
+                <div className={style.tilesContainer}>
                     {tiles.map(tile => (
                         <TileComponent
                             key={tile._id}

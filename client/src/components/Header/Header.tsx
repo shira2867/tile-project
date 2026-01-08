@@ -2,22 +2,18 @@ import React from 'react';
 import { useContext } from "react";
 import { createAvatar } from '@dicebear/core';
 import { lorelei } from '@dicebear/collection';
-import { toPng } from '@dicebear/converter';
 
 import style from './Header.module.css'
-import { UserContext, useUser } from '../../context/UserContext';
-import { negative } from 'zod';
-import { useMemo } from 'react';
+import {  useUser } from '../../context/UserContext';
+
 import { useNavigate } from 'react-router-dom';
 const Header = () => {
   const navigate = useNavigate();
 
   const userContext = useUser();
   const shouldShowImage = () => userContext.role === "admin";
-  console.log("header")
 
 const avatar = createAvatar(lorelei, {
- 
 });
 const avatarUri = avatar.toDataUri();
   return (
