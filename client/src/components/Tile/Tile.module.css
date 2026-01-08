@@ -1,4 +1,39 @@
-.tile{
+.tile {
     width: 250px;
-    height: 350px;
+    height: 320px;
+    border-radius: 5%;
+
+}
+
+.colorButtons {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+}
+
+.colorButton {
+    width: 40px;
+    height: 40px;
+    border-radius: 9%;
+    border: none;
+
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    margin-top: 270px;
+    margin-left: 32px;
+   
+
+}
+
+.deleteBtn {
+    width: 40px;
+    height: 40px;
+    background-color: #90AACB;
+    border: none;
+    border-radius: 9%;
+
 }

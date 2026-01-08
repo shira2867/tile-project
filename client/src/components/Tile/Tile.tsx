@@ -23,10 +23,11 @@ type TileProps = {
  const availableColors = colors.filter(c => c !== color);
   return (
     <div className={style.tile} style={{ backgroundColor: color }}>
+  <div className={style.buttons}>
   {canEditColor && (
     <div className={style.colorButtons}>
       {availableColors.map(c => (
-        <button
+        <button className={style.colorButton}
           key={c}
           style={{ backgroundColor: c }}
           onClick={() => onChangeColor?.(c)}
@@ -39,6 +40,7 @@ type TileProps = {
       <FaTrash />
     </button>
   )}
+</div>
 </div>
 
   );

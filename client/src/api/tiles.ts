@@ -1,5 +1,5 @@
 import axios from "axios";
-import type {Tile} from '../types/tile.type'
+import type {Tile,CreateTile} from '../types/tile.type'
 const BASE_URL = "http://localhost:3000/tiles";
 
 
@@ -9,7 +9,7 @@ export const getAllTiles = async ():Promise<Tile[]> => {
     });
     return res.data;
 };
-export const createTile = async (data: Tile) => {
+export const createTile = async (data: CreateTile) => {
   const res = await axios.post(`${BASE_URL}/createTile`, data,{
             withCredentials: true,
 

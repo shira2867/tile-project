@@ -65,3 +65,18 @@ export async function loginUser(email: string, password: string) {
         user: { id: user._id, name: user.name, email: user.email, role: user.role } 
     };
 }
+
+
+
+// export async function verifyAndFetchUser  (token:string) {
+//     const decoded = jwt.verify(token,  process.env.JWT_SECRET as string , 
+// )as any;
+  
+//     const user = await User.findById(decoded._id).select('-password');
+     
+//     if (!user) {
+//         throw new Error("משתמש לא קיים");
+//     }
+
+//     return user; 
+// };

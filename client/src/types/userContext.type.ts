@@ -1,4 +1,5 @@
 import React, { type ReactNode } from 'react';
+import type { User } from './user.types';
 
 
 export type UserContextType = {

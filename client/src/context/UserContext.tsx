@@ -1,5 +1,6 @@
-import React, { createContext, useState, useContext,type ReactNode, type FC } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 import type {UserContextType,UserProviderProps} from '../types/userContext.type'
+import axios from 'axios';
 
 
 export const UserContext = createContext<UserContextType | null>(null);
@@ -14,8 +15,8 @@ export const UserProvider = ({ children }: UserProviderProps) => {
  ;
  const [name, setName] = useState("user");
  const [role, setRole] = useState<"viewer" | "editor" | "moderator" | "admin">("viewer");
-  const [_id, setId] = useState(" ");
-
+  const [_id, setId] = useState("");
+ 
 
    return (
     <UserContext.Provider value={{_id, name,role,setId,setName,setRole,
