@@ -15,3 +15,10 @@ export type User ={
   email: string;
   role: 'admin' | 'moderator' | 'editor' | 'viewer';
 }
+
+
+export type MyUserPayload= {
+    _id: string;
+    role: 'admin' | 'moderator' | 'editor' | 'viewer';
+    email:string;
+}

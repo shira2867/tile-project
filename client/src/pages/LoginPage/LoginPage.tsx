@@ -4,16 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../api/auth";
 import { LoginSchema } from "../../validation/authSchema";
 import type { LoginData } from "../../types/user.types";
-import { getUsersByEmail } from "../../api/user";
-import { useUser } from "../../context/UserContext";
 import style from './LoginPage.module.css';
 
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useState } from "react";
-
 export default function LoginPage() {
     const navigate = useNavigate();
-    const userContext = useUser();
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -21,25 +17,13 @@ export default function LoginPage() {
         setShowPassword(prev => !prev);
     };
 
-    const mutation = useMutation({
-        mutationFn: loginUser,
-        onSuccess: async (data, variables) => {
-            const email = variables.email;
-            try {
-                const userResponse = await getUsersByEmail(email);
-                const name = userResponse[0].name;
-                const role = userResponse[0].role;
-                const _id=userResponse[0]._id
-                userContext.setName(name);
-                userContext.setRole(role);
-                userContext.setId(_id);
+  const mutation = useMutation({
+    mutationFn: loginUser,
+    onSuccess: () => {
+        navigate("/tiles");
+    },
+});
 
-                navigate("/tiles");
-            } catch (err) {
-                console.error("Error fetching user:", err);
-            }
-        },
-    });
 
     const formik = useFormik<LoginData>({
         initialValues: { email: "", password: "" },
@@ -87,7 +71,7 @@ export default function LoginPage() {
                         />
                         <span
                             onClick={handleToggle}
-                             className={style.iconEye}
+                            className={style.iconEye}
                         >
                             {showPassword ? <FiEye size={20} /> : <FiEyeOff size={20} />}
                         </span>
@@ -104,10 +88,10 @@ export default function LoginPage() {
                     <button className={style.submit} type="submit" disabled={mutation.isPending}>
                         {mutation.isPending ? "Logging in..." : "LOGIN"}
                     </button>
-                    
+
                     <button className={style.bottun}
                         type="button"
-                        onClick={() => navigate("/tiles")}
+                        onClick={() => navigate("/signup")}
                     >
                         SIGNUP
                     </button>

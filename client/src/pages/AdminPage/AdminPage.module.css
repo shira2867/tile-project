@@ -78,14 +78,26 @@
 
 
 @media (max-width: 1024px) {
-  .mainContent {
+  .tableContainer {
     width: 90%;
+    margin-bottom: 100px;
+    margin-top: 30px;
+    border: none;
   }
 }
 
 @media (max-width: 768px) {
-  .mainContent {
+  .tableContainer {
     flex-direction: column; 
     width: 95%;
   }
+  .tableHeader{
+    display: none;
+  }
+}
+@media (max-width: 768px) {
+  .mainContent {
+    flex-direction: column; 
+  }
+  
 }

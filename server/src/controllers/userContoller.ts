@@ -2,7 +2,15 @@ import * as userService from "../services/userService.js";
 import type { Request, Response } from "express";
 import type { IUser } from "../models/user.js";
 import { createUserSchema } from "../schemas/user.zod.js";
-
+import { email } from "zod";
+interface MyUserPayload {
+   _id: string;
+   role: 'admin' | 'moderator' | 'editor' | 'viewer';
+   email:string;
+}
+export interface AuthRequest extends Request {
+  user?: MyUserPayload;
+}
 
 export async function getUsers(req: Request, res: Response) {
   try {
@@ -44,21 +52,6 @@ export async function getUsersByEmail(req: Request, res: Response) {
   }
 }
 
-
-
-export async function register(req: Request, res: Response) {
-  try {
-    const validatedData = createUserSchema.parse(req.body);
-
-    const newUser = await userService.createUser(validatedData);
-    console.log("user created in DB:", newUser);
-
-    res.status(201).json(newUser);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
-  }
-}
 export async function updateUserRole(req: Request, res: Response) {
   try {
     const { userId } = req.params;
@@ -79,6 +72,21 @@ export async function updateUserRole(req: Request, res: Response) {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error while updating role" });
+  }
+}
+
+
+export async function register(req: Request, res: Response) {
+  try {
+    const validatedData = createUserSchema.parse(req.body);
+
+    const newUser = await userService.createUser(validatedData);
+    console.log("user created in DB:", newUser);
+
+    res.status(201).json(newUser);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
   }
 }
 
@@ -116,18 +124,27 @@ export async function login(req: Request, res: Response) {
 }
 
 
-// export async function getCurrentUser (req:Request, res:Response)  {
-//     try {
-//         const token = req.cookies.token;
+export const logout = (req: Request, res: Response) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: false,
+    sameSite:  "lax",
+  });
+  res.status(200).json({ message: "Logged out successfully" });
+};
 
-//         if (!token) {
-//             return res.status(401).json({ message: "לא נמצא משתמש מחובר" });
-//         }
 
-//         const userData = await userService.verifyAndFetchUser(token);
 
-//         res.status(200).json(userData);
-//     } catch (error) {
-//         res.status(401).json({ message: "התחברות לא זמינה" });
-//     }
-// };
+export async function getCurrentUser(req: AuthRequest, res: Response) {
+    if (!req.user) return res.status(401).send();
+
+    res.status(200).json({
+        success: true,
+        data: {
+            _id: req.user._id,
+            role: req.user.role,
+            email:req.user.email
+
+        }
+    });
+};
