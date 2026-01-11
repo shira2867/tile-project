@@ -1,11 +1,12 @@
 .tilesContainer{
 
 display: grid;
-grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 gap:20px;
 padding: 15px;
-margin-top: 120px;
-margin-left: 250px;
+max-width: 1700px;
+margin: 120px auto;
+margin-bottom: 120px;
 }
 
 .buttonColor {
@@ -14,4 +15,79 @@ margin-left: 250px;
     border-radius: 9%;
     border: none;
 
+}
+
+
+.createContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+    position: relative;
+    width: fit-content;
+}
+
+.addTileWrapper {
+    width: 100%;
+    max-width: 250px; 
+    height: 320px;
+    position: relative;
+}
+
+.addButton {
+    width: 100%;
+    height: 100%;
+    border-radius: 5%;  
+    background-color: #90AACB; 
+    border: none;
+    font-size: 120px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+
+.addButton:hover {
+ width: 260px;
+  height: 340px;
+ transition:0.8s
+}
+
+.colorPicker {
+    width: 100%;
+    height: 100%;
+    background-color: #90AACB; 
+    border-radius: 5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.colorGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding: 20px;
+}
+
+.bubbleColorOption {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.bubbleColorOption:hover {
+    transform: scale(1.1);
+}
+
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
 }

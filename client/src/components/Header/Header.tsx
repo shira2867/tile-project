@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useContext } from "react";
 import { createAvatar } from '@dicebear/core';
 import { lorelei } from '@dicebear/collection';
@@ -7,6 +7,8 @@ import style from './Header.module.css'
 import {  useUser } from '../../context/UserContext';
 
 import { useNavigate } from 'react-router-dom';
+import { getCurrentUser, logout } from '../../api/auth';
+import { getUsersByEmail } from '../../api/user';
 const Header = () => {
   const navigate = useNavigate();
 
@@ -16,10 +18,58 @@ const Header = () => {
 const avatar = createAvatar(lorelei, {
 });
 const avatarUri = avatar.toDataUri();
+
+    const [email, setEmail] = useState<string | null>(null);
+
+
+   useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const res = await getCurrentUser();
+        const currentUser = res.data;
+        console.log("currentUser", currentUser.email);
+        setEmail(currentUser.email);
+      } catch (err) {
+        console.error("Error loading user:", err);
+      }
+    };
+
+
+    loadUser();
+  }, []); 
+ useEffect(() => {
+    if (!email) return;
+
+    const loadUserDetails = async () => {
+      try {
+        const userResponse = await getUsersByEmail(email);
+        if (userResponse.length > 0) {
+          const { name, role, _id } = userResponse[0];
+          userContext.setName(name);
+          userContext.setRole(role);
+          userContext.setId(_id);
+        }
+      } catch (err) {
+        console.error("Error loading user details:", err);
+      }
+    };
+
+    loadUserDetails();
+  }, [email, userContext]);
+
+const handleLogout = async () => {
+    try {
+      await logout();
+     
+      navigate("/login");
+    } catch (err) {
+      console.error(err);
+    }
+  };
   return (
     <div className={style.header}>
       <div className={style.details}>
-        <div className={style.avatar}>
+        <div className={style.avatar} onClick={handleLogout}>
           <img src={avatarUri} alt="user" style={{ width: '24px' }} />
 
         </div>

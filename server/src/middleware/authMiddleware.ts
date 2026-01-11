@@ -1,8 +1,14 @@
 import jwt, { JwtPayload, VerifyErrors } from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 
+interface MyUserPayload {
+    _id: string;
+    role: string;
+    email:string
+}
+
 export interface AuthRequest extends Request {
-  user?: JwtPayload | string;
+    user?: MyUserPayload; 
 }
 
 export function authenticateTokenMiddleware(
@@ -16,13 +22,12 @@ export function authenticateTokenMiddleware(
     return res.status(401).json({ message: "No token provided" });
   }
 
-  jwt.verify(token, process.env.JWT_SECRET as string, (err: VerifyErrors | null, decoded: JwtPayload | string | undefined) => {
+  jwt.verify(token, process.env.JWT_SECRET as string, (err: VerifyErrors | null, decoded: JwtPayload | string | undefined|MyUserPayload) => {
     if (err) {
       return res.status(403).json({ message: "Invalid token" });
     }
 
-    req.user = decoded; 
-    next();
+req.user = decoded as MyUserPayload;    next();
   });
 }
 

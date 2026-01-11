@@ -22,8 +22,7 @@ export function TilePage() {
 
     const role = userContext.role;
     const perms = permissions[role] || permissions.viewer;
-    const [selectedColor, setSelectedColor] = useState<string>("");
-
+    const [isPickerOpen, setIsPickerOpen] = useState(false);
     type PendingTile = Partial<Tile> & { isNew?: boolean; toDelete?: boolean };
     const [pendingChanges, setPendingChanges] = useState<Record<string, PendingTile>>({});
 
@@ -88,30 +87,28 @@ export function TilePage() {
     });
 
 
-    const handleChangeColor = useCallback((id: string, newColor: string) => {
+    const handleChangeColor = (id: string, newColor: string) => {
         setPendingChanges(prev => ({
             ...prev,
             [id]: { ...tiles.find(t => t._id === id)!, color: newColor }
         }));
-    }, [tiles]);
+    };
 
-    const handleDelete = useCallback((id: string) => {
+    const handleDelete = (id: string) => {
         setPendingChanges(prev => ({
             ...prev,
             [id]: { ...tiles.find(t => t._id === id)!, toDelete: true }
         }));
-    }, [tiles]);
+    };
 
 
-    const handleCreateTile = () => {
-        if (!selectedColor) return;
-
+    const handleCreateTile = (colorToCreate: string) => {
         const tempId = "temp-" + Date.now();
         setPendingChanges(prev => ({
             ...prev,
             [tempId]: {
                 _id: tempId,
-                color: selectedColor,
+                color: colorToCreate,
                 isNew: true
             }
         }));
@@ -166,50 +163,12 @@ export function TilePage() {
     return (
         <>
             <Header />
-           {perms.create && (
-    <div className={style.createTileDiv}>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-            {colors.map((c) => (
-                <button className={style.colorButton}
-                    key={c}
-                    onClick={() => setSelectedColor(c)}
-                    style={{
-                        width: "36px",
-                        height: "36px",
-                        backgroundColor: c,
-                        borderRadius: "4px",
-                        border: selectedColor === c ? "3px solid #000" : "1px solid #ccc",
-                        cursor: "pointer",
-                        transition: "transform 0.1s",
-                        outline: "none"
-                    }}
-                    title={c}
-                    type="button"
-                />
-            ))}
-        </div>
-        
-        <button 
-            onClick={handleCreateTile} 
-            style={{ 
-                padding: "8px 16px",
-                backgroundColor: "#007bff",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
-                fontWeight: "bold"
-            }}
-        >
-        </button>
-    </div>
-)}
+
             {isLoading ? (
                 <div>טוען...</div>
             ) : isError ? (
                 <div>אירעה שגיאה</div>
             ) : (
-
                 <div className={style.tilesContainer}>
                     {tiles.map(tile => (
                         <TileComponent
@@ -224,11 +183,39 @@ export function TilePage() {
                         />
                     ))}
 
+                    {perms.create && (
+                        <div className={style.addTileWrapper}>
+                            {!isPickerOpen ? (
+                                <button
+                                    className={style.addButton}
+                                    onClick={() => setIsPickerOpen(true)}
+                                >
+                                    +
+                                </button>
+                            ) : (
+                                <div className={style.colorPicker}>
+                                    <div className={style.colorGrid}>
+                                        {colors.map((c) => (
+                                            <button
+                                                key={c}
+                                                onClick={() => {
+                                                    handleCreateTile(c);
+                                                    setIsPickerOpen(false);
+                                                }}
+                                                style={{ backgroundColor: c }}
+                                                className={style.bubbleColorOption}
+                                            />
+                                        ))}
+
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
             )}
 
             <Footer />
-
         </>
-    )
+    );
 }

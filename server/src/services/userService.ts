@@ -55,7 +55,7 @@ export async function loginUser(email: string, password: string) {
     }
 
     const token = jwt.sign(
-        { id: user._id, role: user.role }, 
+        { _id: user._id, role: user.role, email:user.email }, 
         process.env.JWT_SECRET || 'secret', 
         { expiresIn: '1d' } 
     );
@@ -68,15 +68,3 @@ export async function loginUser(email: string, password: string) {
 
 
 
-// export async function verifyAndFetchUser  (token:string) {
-//     const decoded = jwt.verify(token,  process.env.JWT_SECRET as string , 
-// )as any;
-  
-//     const user = await User.findById(decoded._id).select('-password');
-     
-//     if (!user) {
-//         throw new Error("משתמש לא קיים");
-//     }
-
-//     return user; 
-// };
