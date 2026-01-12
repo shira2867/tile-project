@@ -1,28 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { useContext } from "react";
-import { createAvatar } from '@dicebear/core';
-import { lorelei } from '@dicebear/collection';
-
+import { getAvatarUri } from "../../utils/utils";
 import style from './Header.module.css'
-import {  useUser } from '../../context/UserContext';
+import { useUser } from '../../context/UserContext';
 
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { getCurrentUser, logout } from '../../api/auth';
 import { getUsersByEmail } from '../../api/user';
 const Header = () => {
   const navigate = useNavigate();
-
+  const location = useLocation();
   const userContext = useUser();
   const shouldShowImage = () => userContext.role === "admin";
 
-const avatar = createAvatar(lorelei, {
-});
-const avatarUri = avatar.toDataUri();
+  
+  const avatarUri = getAvatarUri();
 
-    const [email, setEmail] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
 
 
-   useEffect(() => {
+  useEffect(() => {
     const loadUser = async () => {
       try {
         const res = await getCurrentUser();
@@ -36,8 +33,8 @@ const avatarUri = avatar.toDataUri();
 
 
     loadUser();
-  }, []); 
- useEffect(() => {
+  }, []);
+  useEffect(() => {
     if (!email) return;
 
     const loadUserDetails = async () => {
@@ -57,10 +54,10 @@ const avatarUri = avatar.toDataUri();
     loadUserDetails();
   }, [email, userContext]);
 
-const handleLogout = async () => {
+  const handleLogout = async () => {
     try {
       await logout();
-     
+
       navigate("/login");
     } catch (err) {
       console.error(err);
@@ -80,12 +77,18 @@ const handleLogout = async () => {
       </div>
       <div className={style.rightIcons}>
         {shouldShowImage() &&
-          <button className={style.headerButton1} onClick={() => navigate("/admin")}>
+          <button
+            className={`${style.headerButton1} ${location.pathname === '/admin' ? style.active : ''}`}
+            onClick={() => navigate("/admin")}
+          >
             <div className={style.icon1}>
               <img src="../../../public/profile.png" alt="pic1" style={{ width: '24px' }} />
             </div>
           </button>}
-        <button className={style.headerButton2} onClick={() => navigate("/tiles")}>
+        <button
+          className={`${style.headerButton2} ${location.pathname === '/tiles' ? style.active : ''}`}
+          onClick={() => navigate("/tiles")}
+        >
           <div className={style.icon2}>
             <img src="../../../public/copy.png" alt="pic2" style={{ width: '24px' }} />
           </div>

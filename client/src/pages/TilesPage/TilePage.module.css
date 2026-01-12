@@ -1,12 +1,12 @@
-.tilesContainer{
+.tilesContainer {
 
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-gap:20px;
-padding: 15px;
-max-width: 1700px;
-margin: 120px auto;
-margin-bottom: 120px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 15px;
+    max-width: 1700px;
+    margin: 120px auto;
+    margin-bottom: 120px;
 }
 
 .buttonColor {
@@ -29,7 +29,7 @@ margin-bottom: 120px;
 
 .addTileWrapper {
     width: 100%;
-    max-width: 250px; 
+    max-width: 250px;
     height: 320px;
     position: relative;
 }
@@ -37,8 +37,8 @@ margin-bottom: 120px;
 .addButton {
     width: 100%;
     height: 100%;
-    border-radius: 5%;  
-    background-color: #90AACB; 
+    border-radius: 5%;
+    background-color: #90AACB;
     border: none;
     font-size: 120px;
     color: white;
@@ -50,15 +50,15 @@ margin-bottom: 120px;
 }
 
 .addButton:hover {
- width: 260px;
-  height: 340px;
- transition:0.8s
+    width: 260px;
+    height: 340px;
+    transition: 0.8s
 }
 
 .colorPicker {
     width: 100%;
     height: 100%;
-    background-color: #90AACB; 
+    background-color: #90AACB;
     border-radius: 5%;
     display: flex;
     align-items: center;
@@ -78,7 +78,7 @@ margin-bottom: 120px;
     height: 60px;
     border-radius: 8px;
     cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
 }
 
@@ -88,6 +88,28 @@ margin-bottom: 120px;
 
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 786px) {
+    .tilesContainer {
+        display: flex;
+        flex-direction: column; 
+        align-items: center;   
+        justify-content: center; 
+        margin: 20px auto;      
+        margin-bottom: 100px;   
+        width: 90%;           
+        max-width: none;        
+        padding: 15px;
+        gap: 20px;
+    }
 }

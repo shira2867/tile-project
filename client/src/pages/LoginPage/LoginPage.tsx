@@ -8,21 +8,22 @@ import style from './LoginPage.module.css';
 
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useState } from "react";
+import { getAvatarUri } from "../../utils/utils";
 export default function LoginPage() {
     const navigate = useNavigate();
 
     const [showPassword, setShowPassword] = useState(false);
-
+    const avatarUri = getAvatarUri();
     const handleToggle = () => {
         setShowPassword(prev => !prev);
     };
 
-  const mutation = useMutation({
-    mutationFn: loginUser,
-    onSuccess: () => {
-        navigate("/tiles");
-    },
-});
+    const LoginMutation = useMutation({
+        mutationFn: loginUser,
+        onSuccess: () => {
+            navigate("/tiles");
+        },
+    });
 
 
     const formik = useFormik<LoginData>({
@@ -40,18 +41,18 @@ export default function LoginPage() {
             return {};
         },
         onSubmit: (values) => {
-            mutation.mutate(values);
+            LoginMutation.mutate(values);
         },
     });
 
-    const serverErrorMessage = (mutation.error as any)?.response?.data?.message
-        || mutation.error?.message;
+    const serverErrorMessage = (LoginMutation.error as any)?.response?.data?.message
+        || LoginMutation.error?.message;
 
     return (
         <div className={style.containerForm}>
             <form className={style.form} onSubmit={formik.handleSubmit}>
                 <div className={style.img}>
-                    <img src="../../../public/user (1).png" alt="user" style={{ width: '80px' }} />
+                    <img src={avatarUri} alt="user" style={{ width: '24px' }} />
                 </div>
 
                 <div>
@@ -81,12 +82,12 @@ export default function LoginPage() {
                     )}
                 </div>
 
-                {mutation.isError && (
+                {LoginMutation.isError && (
                     <p style={{ color: "orange" }}>{serverErrorMessage}</p>
                 )}
                 <div className={style.bottuns}>
-                    <button className={style.submit} type="submit" disabled={mutation.isPending}>
-                        {mutation.isPending ? "Logging in..." : "LOGIN"}
+                    <button className={style.submit} type="submit" disabled={LoginMutation.isPending}>
+                        {LoginMutation.isPending ? "Logging in..." : "LOGIN"}
                     </button>
 
                     <button className={style.bottun}

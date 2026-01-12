@@ -1,26 +1,22 @@
-import axios from "axios";
 import type { User } from "../types/user.types";
+import { axiosInstance } from './manager.service';
 
-const BASE_URL = "http://localhost:3000/users";
 
 
 export const getAllUser = async ():Promise<User[]> => {
-    const res = await axios.get(`${BASE_URL}/getAllUser`, {
-        withCredentials: true,
-    });
+    const res = await axiosInstance.get(`users/getAllUser`
+    );
     return res.data;
 };
 export const getUsersByRole = async (role: string): Promise<User[]> => {
-  const res = await axios.get(`${BASE_URL}/getUserByRole/${role}`, {
-    withCredentials: true,
-  });
+  const res = await axiosInstance.get(`users/getUserByRole/${role}`
+);
   return res.data;
 };
 
 export const getUsersByEmail = async (email: string): Promise<User[]> => {
-  const res = await axios.get(`${BASE_URL}/getUserByEmail`, {
+  const res = await axiosInstance.get(`users/getUserByEmail`, {
     params: { email }, 
-    withCredentials: true,
   });
   return res.data;
 };
@@ -28,9 +24,8 @@ export const getUsersByEmail = async (email: string): Promise<User[]> => {
 
 export const updateUserRole = async (userId: string, newRole: string): Promise<User> => {
 
-  const res = await axios.put(`${BASE_URL}/updateRole/${userId}`, 
+  const res = await axiosInstance.put(`users/updateRole/${userId}`, 
     { role: newRole }, 
-    { withCredentials: true }
   );
   return res.data;
 };

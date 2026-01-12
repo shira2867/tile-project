@@ -55,23 +55,24 @@
 }
 
 
-
-.headerButton1{
+.headerButton1, .headerButton2 {
     border: none;
-    background:none;
-      display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 20px;
-    height: 100%;
-}
-.headerButton2{
-    border:none;
      width: 72px;
-    height: 100%;
-    background-color: #607998;
+    background: none; 
     display: flex;
     align-items: center;
     justify-content: center;
-
+    height: 100%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
+
+.headerButton1 { padding: 0 20px; }
+
+.headerButton1.active {
+    background-color: #607998 !important;
+}
+.headerButton2.active {
+    background-color: #607998 !important;
+}
+

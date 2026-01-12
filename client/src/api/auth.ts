@@ -1,32 +1,30 @@
-import axios from "axios";
 import type { LoginData } from "../types/user.types";
-import type { SignUpData ,MyUserPayload} from "../types/user.types";
+import type { SignUpData } from "../types/user.types";
+import { axiosInstance } from './manager.service';
 
-const BASE_URL = "http://localhost:3000/users";
 
 
 
 export const signUpUser = async (data: SignUpData) => {
-  const res = await axios.post(`${BASE_URL}/signUp`, data);
+  const res = await axiosInstance.post(`users/signUp`, data);
   return res.data;
 };
 export const loginUser = async (data: LoginData) => {
-  const res = await axios.post(`${BASE_URL}/login`, data,
-    {   withCredentials: true,});
+  const res = await axiosInstance.post(`users/login`, data,
+   );
   return res.data;
 };
 
 export const getCurrentUser = async () => {
-  const { data } = await axios.get(`${BASE_URL}/me`,{withCredentials: true}
+  const { data } = await axiosInstance.get(`users/me`
 )
   return data
 }
 
 export const logout = async () => {
   try {
-    const { data } = await axios.get(`${BASE_URL}/logout`, {
-      withCredentials: true, 
-    });
+    const { data } = await axiosInstance.get(`users/logout`
+    );
     console.log(data.message); 
     return data;
   } catch (error) {
