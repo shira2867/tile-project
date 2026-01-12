@@ -5,12 +5,13 @@
 }
 
 .mainContent {
-  display: flex;
+ display: flex;
   width: 66.66%;
   max-width: 1200px;
   padding: 110px 0;
-  height: 580px; 
-  position: relative; 
+  min-height: 580px; 
+  height: auto;     
+  position: relative;
 }
 
 
@@ -20,6 +21,7 @@
   border: white 10px solid;
   border-radius: 22px;
   padding: 20px;
+   height: auto; 
   display: flex;
   flex-direction: column;
   position: relative;
@@ -31,22 +33,20 @@
   background-color: #ECF4FF;
   padding: 36px;
   flex: 1; 
-  max-height: 400px;     
+  max-height: 500px;     
   overflow-y: auto;      
   overflow-x: hidden;            
 }
 
 
 .tableHeader {
-
   display: flex;
   background-color: #90AACB;
   padding: 10px;
   font-weight: 600;
   color: white;
   font-family:Arial, sans-serif;
-  text-transform: uppercase;
-  font-size: 0.85rem;
+  font-size: 18px;
 }
 
 .headerCell {
@@ -76,28 +76,62 @@
   width: 120px; 
 }
 
-
-@media (max-width: 1024px) {
-  .tableContainer {
-    width: 90%;
-    margin-bottom: 100px;
-    margin-top: 30px;
-    border: none;
-  }
-}
-
 @media (max-width: 768px) {
+  
   .tableContainer {
-    flex-direction: column; 
-    width: 95%;
+    background-color: transparent; 
+    border: none;
+    margin-left: 10px; 
+    padding: 10px;
+    margin-top: -90px;
+    max-height: 650px;  
+       
+
+  }
+
+  .containerUser {
+    background-color: transparent; 
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: auto;
+    max-height: 650px !important;
+
+    height: auto;
+
+  }
+
+  .usertable {
+    background-color: white; 
+    border-radius: 12px;
+    padding: 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    border: 1px solid #edf2f7;
+  }
+
+  .cellname {
+    font-weight: bold;
+    color: #2d3748;
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+  }
+
+  .cellemail {
+    color: #718096;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+  }
+
+  .cellrole select {
+    width: 100%;
+    background-color: #f7fafc;
+    border: 1px solid #e2e8f0;
+    padding: 8px;
+    border-radius: 6px;
+    color: #4a5568;
   }
   .tableHeader{
     display: none;
   }
-}
-@media (max-width: 768px) {
-  .mainContent {
-    flex-direction: column; 
-  }
-  
 }

@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext,type ReactNode, type FC } from 'react';
-import type {FooterActions,FooterContextType,FooterProviderProps} from '../types/footerContext.type'
+import type {FooterContextType,FooterProviderProps} from '../types/footerContext.type'
 
 
 export const FooterContext = createContext<FooterContextType | null>(null);

@@ -32,7 +32,8 @@ export function AdminPage() {
     },
   });
 
-  const { mutate, isPending } = useMutation({
+
+    const { mutate, isPending } = useMutation({
     mutationFn: async (changes: User[]) => {
       return Promise.all(changes.map(user => updateUserRole(user._id, user.role)));
     },
@@ -46,6 +47,7 @@ export function AdminPage() {
       alert("אירעה שגיאה בשמירת הנתונים");
     }
   });
+
 
   const handleSave = useCallback(() => {
     const changesToSave = Object.values(pendingChanges);
@@ -90,9 +92,9 @@ export function AdminPage() {
 
           <div className={style.tableContainer}>
             <div className={style.tableHeader}>
-              <span className={style.headerCell}>USER</span>
-              <span className={style.headerCell}>EMAIL</span>
-              <span className={style.headerCell}>ROLE</span>
+              <span className={style.headerCell}>user</span>
+              <span className={style.headerCell}>email</span>
+              <span className={style.headerCell}>role</span>
             </div>
             
             <div className={style.containerUser}>

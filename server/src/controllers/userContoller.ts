@@ -80,6 +80,13 @@ export async function register(req: Request, res: Response) {
   try {
     const validatedData = createUserSchema.parse(req.body);
 
+    const existingUser = await userService.getUserByEmail(validatedData.email);
+    if (existingUser) {
+      return res.status(409).json({
+        message: "Email already in use. Please go to login."
+      });
+    }
+
     const newUser = await userService.createUser(validatedData);
     console.log("user created in DB:", newUser);
 

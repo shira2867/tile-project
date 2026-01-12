@@ -12,7 +12,7 @@ export const useUser = () => {
   return contextUser;
 };
 export const UserProvider = ({ children }: UserProviderProps) => {
- ;
+
  const [name, setName] = useState("user");
  const [role, setRole] = useState<"viewer" | "editor" | "moderator" | "admin">("viewer");
   const [_id, setId] = useState("");

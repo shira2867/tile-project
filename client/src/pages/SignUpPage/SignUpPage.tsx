@@ -7,14 +7,16 @@ import type { SignUpData } from "../../types/user.types";
 import style from './SignUpPage.module.css'
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useState } from "react";
+import { getAvatarUri } from "../../utils/utils";
 export default function SignUpPage() {
   const navigate = useNavigate();
-const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const avatarUri = getAvatarUri();
 
-    const handleToggle = () => {
-        setShowPassword(prev => !prev);
-    };
-  const mutation = useMutation({
+  const handleToggle = () => {
+    setShowPassword(prev => !prev);
+  };
+  const SignUpMutation = useMutation({
     mutationFn: signUpUser,
     onSuccess: () => {
       navigate("/login");
@@ -42,18 +44,18 @@ const [showPassword, setShowPassword] = useState(false);
       return {};
     },
     onSubmit: (values) => {
-      mutation.mutate(values);
+      SignUpMutation.mutate(values);
     },
   });
 
-  const serverErrorMessage = (mutation.error as any)?.response?.data?.message
-    || mutation.error?.message;
+  const serverErrorMessage = (SignUpMutation.error as any)?.response?.data?.message
+    || SignUpMutation.error?.message;
 
   return (
-        <div className={style.containerForm}>
+    <div className={style.containerForm}>
       <form className={style.form} onSubmit={formik.handleSubmit}>
         <div className={style.img}>
-          <img src="../../../public/user (1).png" alt="user" style={{ width: '80px' }} />
+          <img src={avatarUri} alt="user" style={{ width: '24px' }} />
         </div>
         <div>
           <label>Username</label>
@@ -77,32 +79,32 @@ const [showPassword, setShowPassword] = useState(false);
           )}
         </div>
 
-       <div>
-                    <label>Password</label>
-                    <div className={style.passwordWrapper} style={{ position: 'relative' }}>
-                        <input
-                            type={showPassword ? "text" : "password"}
-                            {...formik.getFieldProps("password")}
-                        />
-                        <span
-                            onClick={handleToggle}
-                             className={style.iconEye}
-                        >
-                            {showPassword ? <FiEye size={20} /> : <FiEyeOff size={20} />}
-                        </span>
-                    </div>
-                    {formik.touched.password && formik.errors.password && (
-                        <p style={{ color: "red" }}>{formik.errors.password}</p>
-                    )}
-                </div>
+        <div>
+          <label>Password</label>
+          <div className={style.passwordWrapper} style={{ position: 'relative' }}>
+            <input
+              type={showPassword ? "text" : "password"}
+              {...formik.getFieldProps("password")}
+            />
+            <span
+              onClick={handleToggle}
+              className={style.iconEye}
+            >
+              {showPassword ? <FiEye size={20} /> : <FiEyeOff size={20} />}
+            </span>
+          </div>
+          {formik.touched.password && formik.errors.password && (
+            <p style={{ color: "red" }}>{formik.errors.password}</p>
+          )}
+        </div>
 
-        {mutation.isError && (
+        {SignUpMutation.isError && (
           <p style={{ color: "orange" }}>{serverErrorMessage}</p>
         )}
         <div className={style.bottuns}>
 
-          <button className={style.submit}  type="submit" disabled={mutation.isPending}>
-            {mutation.isPending ? "Signing up..." : "Sign Up"}
+          <button className={style.submit} type="submit" disabled={SignUpMutation.isPending}>
+            {SignUpMutation.isPending ? "Signing up..." : "Sign Up"}
           </button>
           <button className={style.bottun}
             type="button"

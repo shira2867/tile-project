@@ -1,42 +1,35 @@
-import axios from "axios";
-import type {Tile,CreateTile} from '../types/tile.type'
-const BASE_URL = "http://localhost:3000/tiles";
 
+import type { Tile, CreateTile } from '../types/tile.type';
+import { axiosInstance } from './manager.service';
 
-export const getAllTiles = async ():Promise<Tile[]> => {
-    const res = await axios.get(`${BASE_URL}/getAllTiles`, {
-        withCredentials: true,
-    });
-    return res.data;
-};
-export const createTile = async (data: CreateTile) => {
-  const res = await axios.post(`${BASE_URL}/createTile`, data,{
-            withCredentials: true,
-
-  });
+export const getAllTiles = async (): Promise<Tile[]> => {
+  const res = await axiosInstance.get('/tiles/getAllTiles');
   return res.data;
 };
-export const updateTileColor = async (tileId: string, newColor: string): Promise<Tile> => {
 
-  const res = await axios.put(`${BASE_URL}/updateTile/${tileId}`, 
-    { color: newColor }, 
-    { withCredentials: true }
+export const createTile = async (data: CreateTile) => {
+  const res = await axiosInstance.post('/tiles/createTile', data);
+  return res.data;
+};
+
+export const updateTileColor = async (
+  tileId: string,
+  newColor: string
+): Promise<Tile> => {
+  const res = await axiosInstance.put(
+    `/tiles/updateTile/${tileId}`,
+    { color: newColor }
   );
   return res.data;
 };
 
-export const deleteTile = async (tileId: string)=> {
-  const res = await axios.delete(`${BASE_URL}/deleteTile/${tileId}`, {
-    withCredentials: true,
-  });
+export const deleteTile = async (tileId: string) => {
+  const res = await axiosInstance.delete(`/tiles/deleteTile/${tileId}`);
   return res.data;
 };
 
-export const getColors = async ():Promise<string[]> => {
-    const res = await axios.get(`${BASE_URL}/colors`, {
-        withCredentials: true,
-    });
-    return res.data;
+export const getColors = async (): Promise<string[]> => {
+  const res = await axiosInstance.get('/tiles/colors');
+  return res.data;
 };
-
 
