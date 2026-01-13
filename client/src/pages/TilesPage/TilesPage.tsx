@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
@@ -11,6 +11,7 @@ import type { Tile, CreateTile } from "../../types/tile.type";
 import { getAllTiles, getColors, updateTileColor, deleteTile, createTile } from "../../api/tiles";
 import { permissions } from "../../constants/permissions";
 import { TileComponent } from "../../components/Tile/Tile"
+import { tilesSchema } from "../../validation/tileSchema";
 
 export function TilePage() {
     const queryClient = useQueryClient();
@@ -22,7 +23,7 @@ export function TilePage() {
     const [isPickerOpen, setIsPickerOpen] = useState(false);
     type PendingTile = Partial<Tile> & { isNew?: boolean; toDelete?: boolean };
     const [pendingChanges, setPendingChanges] = useState<Record<string, PendingTile>>({});
-//mutation
+    //mutation
     const {
         data: colors = [],
     } = useQuery<string[]>({
@@ -39,11 +40,32 @@ export function TilePage() {
         queryKey: ["tiles"],
         queryFn: getAllTiles,
     });
+    const displayTiles = useMemo(() => {
+        const updatedExisting = tiles
+            .map((tile) => {
+                const pending = pendingChanges[tile._id];
+                if (pending?.toDelete) return null;
+                if (pending) return { ...tile, ...pending };
+                return tile;
+            })
+            .filter(Boolean) as Tile[];
 
+        const newTiles = Object.values(pendingChanges)
+            .filter((change) => change.isNew) as Tile[];
+
+        return [...updatedExisting, ...newTiles];
+    }, [tiles, pendingChanges]);
 
     const updateMutation = useMutation({
         mutationFn: async (changes: Tile[]) => {
-            return Promise.all(changes.map(tile => updateTileColor(tile._id, tile.color)));
+            const parseResult = tilesSchema.safeParse(changes);
+            if (!parseResult.success) {
+                console.error("Validation failed:", parseResult.error);
+                throw new Error("נתונים לא תקינים");
+            }
+            return Promise.all(
+                parseResult.data.map(tile => updateTileColor(tile._id, tile.color))
+            );
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["tiles"] });
@@ -84,10 +106,11 @@ export function TilePage() {
     });
 
 
+
     const handleChangeColor = (id: string, newColor: string) => {
         setPendingChanges(prev => ({
             ...prev,
-            [id]: { ...tiles.find(t => t._id === id)!, color: newColor }
+            [id]: { ...(prev[id] || tiles.find(t => t._id === id)), color: newColor }
         }));
     };
 
@@ -167,8 +190,9 @@ export function TilePage() {
                 <div>אירעה שגיאה</div>
             ) : (
                 <div className={style.tilesContainer}>
-                    {tiles.map(tile => (
+                    {displayTiles.map(tile => (
                         <TileComponent
+                            key={`${tile._id}-${tile.color}`}
                             _id={tile._id}
                             color={tile.color}
                             colors={colors}

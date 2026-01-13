@@ -14,3 +14,9 @@ export const createUserSchema = z.object({
     ),
   role: z.enum(["viewer", "editor", "moderator", "admin"]).optional(),
 });
+
+const allowedrole =  ["viewer", "editor", "moderator", "admin"] ;
+
+export const RoleSchema = z.object({
+  role: z.enum(allowedrole), 
+});

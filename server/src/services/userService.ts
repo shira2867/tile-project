@@ -20,6 +20,10 @@ export async function getUserByEmail(email:string): Promise<IUser[]> {
 }
 
 
+export async function getUserById(id: string): Promise<IUser | null> {
+  return User.findById(id);
+}
+
 
 export async function getUserByRole(role:string): Promise<IUser[]> {
  const users = await User.find({ role: role }); 
@@ -55,14 +59,14 @@ export async function loginUser(email: string, password: string) {
     }
 
     const token = jwt.sign(
-        { _id: user._id, role: user.role, email:user.email }, 
+        { _id: user._id,name:user.name, role: user.role, email:user.email }, 
         process.env.JWT_SECRET || 'secret', 
         { expiresIn: '1d' } 
     );
 
     return { 
         token, 
-        user: { id: user._id, name: user.name, email: user.email, role: user.role } 
+        user: { id: user._id, name: user.name, role: user.role,email: user.email } 
     };
 }
 

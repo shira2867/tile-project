@@ -1,3 +1,4 @@
+import { TileSchema } from "../schemas/tile.zod.js";
 import * as tileService from "../services/tileService.js"; 
 import type { Request, Response } from "express";
 
@@ -13,9 +14,11 @@ export async function getTiles(req: Request, res: Response) {
 
 export async function createTiles(req: Request, res: Response) {
   try {
-    const { color } = req.body;
     
-    const newTile = await tileService.createTile({ color });
+        const color = TileSchema.parse(req.body);
+    
+    
+    const newTile = await tileService.createTile( color );
     
     console.log("Tile created in DB:", newTile);
     
@@ -31,11 +34,12 @@ export async function createTiles(req: Request, res: Response) {
 export async function updateTileColor(req: Request, res: Response) {
   try {
     const { tileId } = req.params; 
-    const { color } = req.body;    
+        const color = TileSchema.parse(req.body);
+    
     if (!color) {
        return res.status(400).json({ error: "color is required" });
     }
-    const updatedtile = await tileService.updateTile(tileId, { color });
+    const updatedtile = await tileService.updateTile(tileId, color );
     if (!updatedtile) {
       return res.status(404).json({ error: "tile not found" });
     }
