@@ -33,27 +33,30 @@ export function AdminPage() {
   });
 
 
-    const { mutate, isPending } = useMutation({
-    mutationFn: async (changes: User[]) => {
-      return Promise.all(changes.map(user => updateUserRole(user._id, user.role)));
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["users"] }); 
-      setPendingChanges({}); 
-      alert("השינויים נשמרו בהצלחה!");
-    },
-    onError: (error) => {
-      console.error("Save failed:", error);
-      alert("אירעה שגיאה בשמירת הנתונים");
-    }
-  });
+  const updateUsersRoleMutation = useMutation({
+  mutationFn: async (changes: User[]) => {
+    return Promise.all(
+      changes.map(user => updateUserRole(user._id, user.role))
+    );
+  },
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ["users"] });
+    setPendingChanges({});
+    alert("השינויים נשמרו בהצלחה!");
+  },
+  onError: (error) => {
+    console.error("Save failed:", error);
+    alert("אירעה שגיאה בשמירת הנתונים");
+  }
+});
+
 
 
   const handleSave = useCallback(() => {
     const changesToSave = Object.values(pendingChanges);
     if (changesToSave.length === 0) return;
-    mutate(changesToSave);
-  }, [pendingChanges, mutate]);
+    updateUsersRoleMutation.mutate(changesToSave);
+  }, [pendingChanges, updateUsersRoleMutation.mutate]);
 
   const handleUndo = useCallback(() => {
     setPendingChanges({});
@@ -63,11 +66,11 @@ export function AdminPage() {
     setFooterActions({
       onSave: handleSave,
       onUndo: handleUndo, 
-      disabled: Object.keys(pendingChanges).length === 0 || isPending, 
+      disabled: Object.keys(pendingChanges).length === 0 || updateUsersRoleMutation.isPending, 
     });
 
     return () => setFooterActions({ onSave: null, onUndo: null, disabled: false });
-  }, [pendingChanges, isPending, handleSave, handleUndo, setFooterActions]);
+  }, [pendingChanges, updateUsersRoleMutation.isPending, handleSave, handleUndo, setFooterActions]);
 
   const handleRoleChange = (userId: string, newRole: User["role"]) => {
     const originalUser = users.find(u => u._id === userId);

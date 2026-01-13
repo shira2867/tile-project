@@ -11,10 +11,7 @@ import type { Tile, CreateTile } from "../../types/tile.type";
 import { getAllTiles, getColors, updateTileColor, deleteTile, createTile } from "../../api/tiles";
 import { permissions } from "../../constants/permissions";
 import { TileComponent } from "../../components/Tile/Tile"
-//לכולם יכולים לצפות בצבעים
-//לeditor יכול לצפות ולשנות צבעים
-//admin & moderator יכול לצפות לשנות ליצור ולמחוק
-//פונקצית create
+
 export function TilePage() {
     const queryClient = useQueryClient();
     const userContext = useUser();
@@ -25,7 +22,7 @@ export function TilePage() {
     const [isPickerOpen, setIsPickerOpen] = useState(false);
     type PendingTile = Partial<Tile> & { isNew?: boolean; toDelete?: boolean };
     const [pendingChanges, setPendingChanges] = useState<Record<string, PendingTile>>({});
-
+//mutation
     const {
         data: colors = [],
     } = useQuery<string[]>({
@@ -172,7 +169,6 @@ export function TilePage() {
                 <div className={style.tilesContainer}>
                     {tiles.map(tile => (
                         <TileComponent
-                            key={tile._id}
                             _id={tile._id}
                             color={tile.color}
                             colors={colors}
@@ -203,7 +199,7 @@ export function TilePage() {
                                                     setIsPickerOpen(false);
                                                 }}
                                                 style={{ backgroundColor: c }}
-                                                className={style.bubbleColorOption}
+                                                className={style.ColorOption}
                                             />
                                         ))}
 
