@@ -73,7 +73,7 @@
     padding: 20px;
 }
 
-.bubbleColorOption {
+.ColorOption {
     width: 60px;
     height: 60px;
     border-radius: 8px;
@@ -82,7 +82,7 @@
     transition: transform 0.2s;
 }
 
-.bubbleColorOption:hover {
+.ColorOption:hover {
     transform: scale(1.1);
 }
 
