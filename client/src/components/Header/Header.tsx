@@ -16,43 +16,29 @@ const Header = () => {
   
   const avatarUri = getAvatarUri();
 
-  const [email, setEmail] = useState<string | null>(null);
 
 
-  useEffect(() => {
-    const loadUser = async () => {
-      try {
-        const res = await getCurrentUser();
-        const currentUser = res.data;
-        console.log("currentUser", currentUser.email);
-        setEmail(currentUser.email);
-      } catch (err) {
-        console.error("Error loading user:", err);
+useEffect(() => {
+  const loadUser = async () => {
+    try {
+      const res = await getCurrentUser();
+      const currentUser = res.data;
+      console.log("currentUser",currentUser)
+
+      if (currentUser) {
+        userContext.setName(currentUser.name);
+        userContext.setRole(currentUser.role);
+        userContext.setId(currentUser._id);
       }
-    };
+    } catch (err) {
+      navigate('/login')
+      console.error("Error loading user:", err);
+    }
+  };
 
+  loadUser();
+}, []);
 
-    loadUser();
-  }, []);
-  useEffect(() => {
-    if (!email) return;
-
-    const loadUserDetails = async () => {
-      try {
-        const userResponse = await getUsersByEmail(email);
-        if (userResponse.length > 0) {
-          const { name, role, _id } = userResponse[0];
-          userContext.setName(name);
-          userContext.setRole(role);
-          userContext.setId(_id);
-        }
-      } catch (err) {
-        console.error("Error loading user details:", err);
-      }
-    };
-
-    loadUserDetails();
-  }, [email, userContext]);
 
   const handleLogout = async () => {
     try {

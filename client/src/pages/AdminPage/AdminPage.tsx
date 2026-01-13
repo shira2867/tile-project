@@ -9,6 +9,7 @@ import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import { useUser } from '../../context/UserContext';
 import style from './AdminPage.module.css'
+import { usersSchema } from "../../validation/userSchema";
 
 export function AdminPage() {
   const queryClient = useQueryClient();
@@ -35,10 +36,22 @@ export function AdminPage() {
 
   const updateUsersRoleMutation = useMutation({
   mutationFn: async (changes: User[]) => {
+
+     const parseResult = usersSchema.safeParse(changes);
+    if (!parseResult.success) {
+      console.error("Validation failed:", parseResult.error);
+      throw new Error("נתונים לא תקינים");
+    }
     return Promise.all(
-      changes.map(user => updateUserRole(user._id, user.role))
+      parseResult.data.map(user => updateUserRole(user._id, user.role))
     );
   },
+
+
+
+
+
+
   onSuccess: () => {
     queryClient.invalidateQueries({ queryKey: ["users"] });
     setPendingChanges({});

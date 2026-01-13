@@ -1,8 +1,10 @@
 import jwt, { JwtPayload, VerifyErrors } from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
+import { getUserById } from "../services/userService.js";
 
 interface MyUserPayload {
     _id: string;
+    name:string
     role: string;
     email:string
 }
@@ -19,16 +21,31 @@ export function authenticateTokenMiddleware(
   const token = req.cookies?.token;
       console.log("token :", token); 
   if (!token) {
+    
     return res.status(401).json({ message: "No token provided" });
   }
 
-  jwt.verify(token, process.env.JWT_SECRET as string, (err: VerifyErrors | null, decoded: JwtPayload | string | undefined|MyUserPayload) => {
+  jwt.verify(token, process.env.JWT_SECRET as string, async(err: VerifyErrors | null, decoded: JwtPayload | any) => {
     if (err) {
       return res.status(403).json({ message: "Invalid token" });
     }
+      const payload = decoded as MyUserPayload;
+      console.log("user payload",payload)
 
-req.user = decoded as MyUserPayload;    next();
+    try {
+      const user = await getUserById(payload._id); 
+      console.log("user middleware",user)
+      if (!user || user.role !== payload.role) {
+        res.clearCookie("token"); 
+        return res.status(401).json({ message: "User data changed, please login again" });
+      }
+    req.user = user as MyUserPayload;  next();}
+   catch (error) {
+      console.error("Auth middleware error:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
   });
+
 }
 
 
