@@ -167,7 +167,8 @@ export const logout = (req: Request, res: Response) => {
 
 
 export async function getCurrentUser(req: AuthRequest, res: Response) {
-  if (!req.user) return res.status(401).send();
+  if (!req.user) 
+    return res.status(401).send();
 
   res.status(200).json({
     success: true,

@@ -26,21 +26,27 @@ export function authenticateTokenMiddleware(
   }
 
   jwt.verify(token, process.env.JWT_SECRET as string, async(err: VerifyErrors | null, decoded: JwtPayload | any) => {
-    if (err) {
+    if (err)
+    {
       return res.status(403).json({ message: "Invalid token" });
     }
       const payload = decoded as MyUserPayload;
       console.log("user payload",payload)
 
-    try {
+    try 
+    {
       const user = await getUserById(payload._id); 
       console.log("user middleware",user)
-      if (!user || user.role !== payload.role) {
+      if (!user || user.role !== payload.role)
+      {
         res.clearCookie("token"); 
         return res.status(401).json({ message: "User data changed, please login again" });
       }
-    req.user = user as MyUserPayload;  next();}
-   catch (error) {
+    req.user = user as MyUserPayload;  
+    next();
+  }
+   catch (error)
+    {
       console.error("Auth middleware error:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
@@ -52,15 +58,18 @@ export function authenticateTokenMiddleware(
 
 
 
-export function authorizeRolesMiddleware(allowedRoles: string[]) {
-  return (req: AuthRequest, res: Response, next: NextFunction) => {
-    if (!req.user || typeof req.user === "string") {
+export function authorizeRolesMiddleware(allowedRoles: string[]) 
+{
+  return (req: AuthRequest, res: Response, next: NextFunction) => 
+    {
+    if (!req.user || typeof req.user === "string") 
+    {
       return res.status(401).json({ message: "Unauthorized" });
     }
-
     const userRole = req.user.role;
 
-    if (!allowedRoles.includes(userRole)) {
+    if (!allowedRoles.includes(userRole))
+    {
       return res.status(403).json({ message: "Access denied" });
     }
 

@@ -1,12 +1,13 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { z } from "zod";
-
 import { User } from "../models/user.js"; 
-import type { IUser} from "../models/user.js"; 
-import { createUserSchema } from "../schemas/user.zod.js";
-export type CreateUserInput = z.infer<typeof createUserSchema>;
+import type { IUser} from "../models/user.js";
 
+ type CreateUserInput = {
+  email: string;
+  password: string;
+  name: string;
+};
 export async function getAllUser(): Promise<IUser[]> {
  const users=await User.find();
  console.log(users)
@@ -60,7 +61,7 @@ export async function loginUser(email: string, password: string) {
 
     const token = jwt.sign(
         { _id: user._id,name:user.name, role: user.role, email:user.email }, 
-        process.env.JWT_SECRET || 'secret', 
+        process.env.JWT_SECRET as string, 
         { expiresIn: '1d' } 
     );
 
