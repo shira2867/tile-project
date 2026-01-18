@@ -55,7 +55,7 @@ export default function SignUpPage() {
     <div className={style.containerForm}>
       <form className={style.form} onSubmit={formik.handleSubmit}>
         <div className={style.img}>
-          <img src={avatarUri} alt="user" style={{ width: '24px' }} />
+          <img src={avatarUri} alt="user" />
         </div>
         <div>
           <label>Username</label>
@@ -64,7 +64,7 @@ export default function SignUpPage() {
             {...formik.getFieldProps("name")}
           />
           {formik.touched.name && formik.errors.name && (
-            <p style={{ color: "red" }}>{formik.errors.name}</p>
+  <p className={style.errorMessage}>{formik.errors.name}</p>
           )}
         </div>
 
@@ -75,13 +75,13 @@ export default function SignUpPage() {
             {...formik.getFieldProps("email")}
           />
           {formik.touched.email && formik.errors.email && (
-            <p style={{ color: "red" }}>{formik.errors.email}</p>
+          <p className={style.errorMessage}>{formik.errors.email}</p>
           )}
         </div>
 
         <div>
           <label>Password</label>
-          <div className={style.passwordWrapper} style={{ position: 'relative' }}>
+          <div className={style.passwordWrapper} >
             <input
               type={showPassword ? "text" : "password"}
               {...formik.getFieldProps("password")}
@@ -94,12 +94,12 @@ export default function SignUpPage() {
             </span>
           </div>
           {formik.touched.password && formik.errors.password && (
-            <p style={{ color: "red" }}>{formik.errors.password}</p>
+            <p className={style.errorMessage}>{formik.errors.password}</p>
           )}
         </div>
 
         {SignUpMutation.isError && (
-          <p style={{ color: "orange" }}>{serverErrorMessage}</p>
+           <p className={style.serverError}>{serverErrorMessage}</p>
         )}
         <div className={style.bottuns}>
 

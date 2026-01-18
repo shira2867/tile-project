@@ -52,20 +52,20 @@ export default function LoginPage() {
         <div className={style.containerForm}>
             <form className={style.form} onSubmit={formik.handleSubmit}>
                 <div className={style.img}>
-                    <img src={avatarUri} alt="user" style={{ width: '24px' }} />
+                    <img src={avatarUri} alt="user"  />
                 </div>
 
                 <div>
                     <label>Email</label>
                     <input type="email" {...formik.getFieldProps("email")} />
                     {formik.touched.email && formik.errors.email && (
-                        <p style={{ color: "red" }}>{formik.errors.email}</p>
+                    <p className={style.errorMessage}>{formik.errors.email}</p>
                     )}
                 </div>
 
                 <div>
                     <label>Password</label>
-                    <div className={style.passwordWrapper} style={{ position: 'relative' }}>
+                    <div className={style.passwordWrapper} >
                         <input
                             type={showPassword ? "text" : "password"}
                             {...formik.getFieldProps("password")}
@@ -78,12 +78,12 @@ export default function LoginPage() {
                         </span>
                     </div>
                     {formik.touched.password && formik.errors.password && (
-                        <p style={{ color: "red" }}>{formik.errors.password}</p>
+                    <p className={style.errorMessage}>{formik.errors.password}</p>
                     )}
                 </div>
 
                 {LoginMutation.isError && (
-                    <p style={{ color: "orange" }}>{serverErrorMessage}</p>
+                    <p className={style.serverErrorMessage}>{serverErrorMessage}</p>
                 )}
                 <div className={style.bottuns}>
                     <button className={style.submit} type="submit" disabled={LoginMutation.isPending}>

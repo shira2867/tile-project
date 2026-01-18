@@ -18,6 +18,7 @@
 }
 
 .img {
+    width: 24px;
     display: flex;         
     justify-content: center;
     align-items: center;    
@@ -131,7 +132,7 @@
         padding: 20px;
         gap: 15px;
     }
-
+   
     .form input {
         width: 100%; 
         box-sizing: border-box; 
@@ -150,4 +151,18 @@
         width: 100%;
         padding: 15px; 
     }
+}
+
+.errorMessage {
+  color: red;
+  font-size: 0.875rem; 
+  margin-top: 4px;
+}
+.serverError {
+  color: orange;
+  font-size: 0.875rem;
+  margin-top: 4px;
+}
+.passwordWrapper{
+ position: relative
 }

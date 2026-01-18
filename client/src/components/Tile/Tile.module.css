@@ -2,8 +2,12 @@
     width: 250px;
     height: 320px;
     border-radius: 5%;
-
 }
+
+.tile[data-color="#E98652"] { background-color: #E98652; }
+.tile[data-color="#F9D5A7"] { background-color: #F9D5A7; }
+.tile[data-color="#FFB085"] { background-color: #FFB085; }
+.tile[data-color="#FEF1E6"] { background-color: #FEF1E6; }
 
 .colorButtons {
     display: flex;
@@ -16,17 +20,20 @@
     height: 40px;
     border-radius: 9%;
     border: none;
-
+    cursor: pointer;
 }
+
+.colorButton[data-color="#E98652"] { background-color: #E98652; }
+.colorButton[data-color="#F9D5A7"] { background-color: #F9D5A7; }
+.colorButton[data-color="#FFB085"] { background-color: #FFB085; }
+.colorButton[data-color="#FEF1E6"] { background-color: #FEF1E6; }
 
 .buttons {
     display: flex;
     flex-direction: row;
     gap: 8px;
-    margin-top: 270px;
+    padding-top: 270px;
     margin-left: 32px;
-   
-
 }
 
 .deleteBtn {
@@ -35,5 +42,9 @@
     background-color: #90AACB;
     border: none;
     border-radius: 9%;
-
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
 }

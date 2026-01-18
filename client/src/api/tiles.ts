@@ -1,4 +1,5 @@
 
+import type { Color } from '../types/tile.type';
 import type { Tile, CreateTile } from '../types/tile.type';
 import { axiosInstance } from './manager.service';
 
@@ -28,8 +29,5 @@ export const deleteTile = async (tileId: string) => {
   return res.data;
 };
 
-export const getColors = async (): Promise<string[]> => {
-  const res = await axiosInstance.get('/tiles/colors');
-  return res.data;
-};
+
 

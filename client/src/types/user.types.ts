@@ -2,6 +2,13 @@ export type LoginData ={
     email: string;
     password: string;
 }
+export const roles = [
+  "admin",
+  "moderator",
+  "editor",
+  "viewer",
+] as const
+export type Role = typeof roles[number];
 
 
 export type SignUpData= {
@@ -9,16 +16,17 @@ export type SignUpData= {
   email: string;
   password: string;
 }
+
 export type User ={
   _id: string;
   name: string;
   email: string;
-  role: 'admin' | 'moderator' | 'editor' | 'viewer';
+  role: Role;
 }
 
 
 export type MyUserPayload= {
     _id: string;
-    role: 'admin' | 'moderator' | 'editor' | 'viewer';
+    role:Role;
     email:string;
 }

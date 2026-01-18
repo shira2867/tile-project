@@ -1,5 +1,5 @@
 import React from 'react';
-import type { User } from '../../types/user.types';
+import { roles, type User } from '../../types/user.types';
 import style from './UserTable.module.css'
 interface UserTableProps {
   user: User;
@@ -20,17 +20,19 @@ const UserTable: React.FC<UserTableProps> = ({ user, onRoleChange,disableRoleCha
         </div>
 
         <div className={style.cellrole}>
-          <select
-            value={user.role}
-            disabled={disableRoleChange}
-
-            onChange={(e) => onRoleChange(user._id, e.target.value as User['role'])}
-          >
-            <option value="admin">Admin</option>
-            <option value="moderator">Moderator</option>
-            <option value="editor">Editor</option>
-            <option value="viewer">Viewer</option>
-          </select>
+    <select
+      value={user.role}
+      disabled={disableRoleChange}
+      onChange={(e) =>
+      onRoleChange(user._id, e.target.value as User["role"])
+  }
+     >
+      {roles.map((role) => (
+      <option key={role} value={role}>
+       {role}
+      </option>
+       ))}
+    </select>
 
 
         </div>
