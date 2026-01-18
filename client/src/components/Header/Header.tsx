@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useContext } from "react";
+import  { useEffect } from 'react';
+
 import { getAvatarUri } from "../../utils/utils";
 import style from './Header.module.css'
 import { useUser } from '../../context/UserContext';
 
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getCurrentUser, logout } from '../../api/auth';
-import { getUsersByEmail } from '../../api/user';
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -53,7 +52,7 @@ useEffect(() => {
     <div className={style.header}>
       <div className={style.details}>
         <div className={style.avatar} onClick={handleLogout}>
-          <img src={avatarUri} alt="user" style={{ width: '24px' }} />
+          <img src={avatarUri} alt="user" />
 
         </div>
         <div className={style.textWrapper}>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getAllUser, getUsersByRole, updateUserRole } from "../../api/user"; 
 import type { User } from '../../types/user.types';
@@ -10,12 +10,7 @@ import Header from "../../components/Header/Header";
 import { useUser } from '../../context/UserContext';
 import style from './AdminPage.module.css'
 import { usersSchema } from "../../validation/userSchema";
-import { notification } from "antd";
-export const handleSuccessNotification = (message: string) => {
-    notification.success({
-        message,
-    });
-};
+import {handleSuccessNotification,handleErrorNotification} from "../../constants/message"
 export function AdminPage() {
   const queryClient = useQueryClient();
   const { setFooterActions } = useFooter();
@@ -59,7 +54,7 @@ export function AdminPage() {
  },
   onError: (error) => {
     console.error("Save failed:", error);
-    alert("אירעה שגיאה בשמירת הנתונים");
+    handleErrorNotification("אירעה שגיאה בשמירת הנתונים");
   }
 });
 

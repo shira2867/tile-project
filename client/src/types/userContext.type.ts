@@ -1,14 +1,13 @@
 import React, { type ReactNode } from 'react';
-import type { User } from './user.types';
 
-
+import type{Role} from './user.types'
 export type UserContextType = {
     _id: string;
     name: string;
-    role: "viewer" | "editor" | "moderator" | "admin";
+    role: Role;
     setId: (_id: string) => void;
     setName: (name: string) => void;
-    setRole: (role: "viewer" | "editor" | "moderator" | "admin") => void;
+    setRole: (role: Role) => void;
 
 }
 

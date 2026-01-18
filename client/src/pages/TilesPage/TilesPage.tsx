@@ -8,10 +8,15 @@ import { useUser } from "../../context/UserContext";
 import { useFooter } from "../../context/FooterContext";
 
 import type { Tile, CreateTile } from "../../types/tile.type";
-import { getAllTiles, getColors, updateTileColor, deleteTile, createTile } from "../../api/tiles";
+import { getAllTiles, updateTileColor, deleteTile, createTile } from "../../api/tiles";
 import { permissions } from "../../constants/permissions";
 import { TileComponent } from "../../components/Tile/Tile"
 import { tilesSchema } from "../../validation/tileSchema";
+import {handleSuccessNotification,handleErrorNotification} from "../../constants/message"
+import type { Color } from "../../types/tile.type";
+import {colorOptions}  from "../../types/tile.type";
+
+
 
 export function TilePage() {
     const queryClient = useQueryClient();
@@ -24,12 +29,6 @@ export function TilePage() {
     type PendingTile = Partial<Tile> & { isNew?: boolean; toDelete?: boolean };
     const [pendingChanges, setPendingChanges] = useState<Record<string, PendingTile>>({});
     //mutation
-    const {
-        data: colors = [],
-    } = useQuery<string[]>({
-        queryKey: ["colors"],
-        queryFn: getColors,
-    });
 
 
     const {
@@ -70,11 +69,11 @@ export function TilePage() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["tiles"] });
             setPendingChanges({});
-            alert("השינויים נשמרו בהצלחה!");
+            handleSuccessNotification("השינויים נשמרו בהצלחה!");
         },
         onError: (error) => {
             console.error("Save failed:", error);
-            alert("אירעה שגיאה בשמירת הנתונים");
+            handleErrorNotification("אירעה שגיאה בשמירת הנתונים");
         }
     });
 
@@ -84,11 +83,11 @@ export function TilePage() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["tiles"] });
             setPendingChanges({});
-            alert("האריח נוצר בהצלחה!");
+            handleSuccessNotification("האריח נוצר בהצלחה!");
         },
         onError: (error) => {
             console.error("Save failed:", error);
-            alert("אירעה שגיאה ביצירת האריח ");
+            handleErrorNotification("אירעה שגיאה ביצירת האריח ");
         }
     });
 
@@ -101,13 +100,13 @@ export function TilePage() {
         },
         onError: (error) => {
             console.error("Error deleting tile:", error);
-            alert("אירעה שגיאה במחיקה");
+            handleErrorNotification("אירעה שגיאה במחיקה");
         }
     });
 
 
 
-    const handleChangeColor = (id: string, newColor: string) => {
+    const handleChangeColor = (id: string, newColor: Color) => {
         setPendingChanges(prev => ({
             ...prev,
             [id]: { ...(prev[id] || tiles.find(t => t._id === id)), color: newColor }
@@ -122,7 +121,7 @@ export function TilePage() {
     };
 
 
-    const handleCreateTile = (colorToCreate: string) => {
+    const handleCreateTile = (colorToCreate: Color) => {
         const tempId = "temp-" + Date.now();
         setPendingChanges(prev => ({
             ...prev,
@@ -195,7 +194,7 @@ export function TilePage() {
                             key={`${tile._id}-${tile.color}`}
                             _id={tile._id}
                             color={tile.color}
-                            colors={colors}
+                            colors={colorOptions}
                             canEditColor={perms.editColor}
                             canDelete={perms.delete}
                             onChangeColor={(newColor) => handleChangeColor(tile._id, newColor)}
@@ -215,14 +214,14 @@ export function TilePage() {
                             ) : (
                                 <div className={style.colorPicker}>
                                     <div className={style.colorGrid}>
-                                        {colors.map((c) => (
+                                        {colorOptions.map((c) => (
                                             <button
                                                 key={c}
                                                 onClick={() => {
                                                     handleCreateTile(c);
                                                     setIsPickerOpen(false);
-                                                }}
-                                                style={{ backgroundColor: c }}
+                                                 }}
+                                                data-color={c}                  
                                                 className={style.ColorOption}
                                             />
                                         ))}
