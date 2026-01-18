@@ -19,3 +19,9 @@ export const User = model("User", userSchema);
 
 
 
+export interface MyUserPayload {
+  _id: string;
+  name:string;
+  role: 'admin' | 'moderator' | 'editor' | 'viewer';
+  email: string;
+}
