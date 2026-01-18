@@ -10,7 +10,12 @@ import Header from "../../components/Header/Header";
 import { useUser } from '../../context/UserContext';
 import style from './AdminPage.module.css'
 import { usersSchema } from "../../validation/userSchema";
-
+import { notification } from "antd";
+export const handleSuccessNotification = (message: string) => {
+    notification.success({
+        message,
+    });
+};
 export function AdminPage() {
   const queryClient = useQueryClient();
   const { setFooterActions } = useFooter();
@@ -50,8 +55,8 @@ export function AdminPage() {
   onSuccess: () => {
     queryClient.invalidateQueries({ queryKey: ["users"] });
     setPendingChanges({});
-    alert("השינויים נשמרו בהצלחה!");
-  },
+    handleSuccessNotification("הצלחה")
+ },
   onError: (error) => {
     console.error("Save failed:", error);
     alert("אירעה שגיאה בשמירת הנתונים");

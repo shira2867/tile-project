@@ -2,12 +2,8 @@ import jwt, { JwtPayload, VerifyErrors } from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 import { getUserById } from "../services/userService.js";
 
-interface MyUserPayload {
-    _id: string;
-    name:string
-    role: string;
-    email:string
-}
+import {MyUserPayload} from "../models/user.js"
+
 
 export interface AuthRequest extends Request {
     user?: MyUserPayload; 

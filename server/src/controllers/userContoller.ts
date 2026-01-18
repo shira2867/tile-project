@@ -2,13 +2,8 @@ import * as userService from "../services/userService.js";
 import type { Request, Response } from "express";
 import type { IUser } from "../models/user.js";
 import { createUserSchema, RoleSchema } from "../schemas/user.zod.js";
-import { email } from "zod";
-interface MyUserPayload {
-  _id: string;
-  name:string;
-  role: 'admin' | 'moderator' | 'editor' | 'viewer';
-  email: string;
-}
+import {MyUserPayload} from "../models/user.js"
+
 export interface AuthRequest extends Request {
   user?: MyUserPayload;
 }
@@ -110,10 +105,8 @@ export async function register(req: Request, res: Response) {
         message: "Email already in use. Please go to login."
       });
     }
-
     const newUser = await userService.createUser(validatedData);
     console.log("user created in DB:", newUser);
-
     res.status(201).json(newUser);
   } catch (err) {
     console.error(err);
