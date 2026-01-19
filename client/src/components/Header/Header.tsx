@@ -1,5 +1,4 @@
 import  { useEffect } from 'react';
-
 import { getAvatarUri } from "../../utils/utils";
 import style from './Header.module.css'
 import { useUser } from '../../context/UserContext';

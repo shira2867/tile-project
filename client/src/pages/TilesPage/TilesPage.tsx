@@ -21,8 +21,7 @@ import {colorOptions}  from "../../types/tile.type";
 export function TilePage() {
     const queryClient = useQueryClient();
     const userContext = useUser();
-    const { setFooterActions } = useFooter();
-
+const { registerActions } = useFooter();
     const role = userContext.role;
     const perms = permissions[role] || permissions.viewer;
     const [isPickerOpen, setIsPickerOpen] = useState(false);
@@ -137,8 +136,7 @@ export function TilePage() {
         setPendingChanges({});
     }, []);
 
-
-    const handleSaveTiles = useCallback(() => {
+    const handleSaveTiles = useCallback(async () => {
         const changesToSave = Object.values(pendingChanges);
         if (changesToSave.length === 0) return;
 
@@ -146,38 +144,38 @@ export function TilePage() {
         const updates = changesToSave.filter(c => !c.isNew && !c.toDelete);
         const deletions = changesToSave.filter(c => c.toDelete);
 
+        const promises: Promise<any>[] = [];
+
         creations.forEach(tile =>
-            createTileMutation.mutate({ color: tile.color! })
+            promises.push(createTileMutation.mutateAsync({ color: tile.color! }))
         );
 
-        if (updates.length > 0) updateMutation.mutate(updates as Tile[]);
+        if (updates.length > 0) {
+            promises.push(updateMutation.mutateAsync(updates as Tile[]));
+        }
 
-        deletions.forEach(tile => deleteMutation.mutate(tile._id!));
+        deletions.forEach(tile => 
+            promises.push(deleteMutation.mutateAsync(tile._id!))
+        );
 
-        setPendingChanges({});
-    }, [pendingChanges]);
-
-
-
+        await Promise.all(promises);
+        setPendingChanges({}); 
+    }, [pendingChanges, createTileMutation, updateMutation, deleteMutation]);
 
     useEffect(() => {
-        setFooterActions({
+        registerActions({
             onSave: handleSaveTiles,
             onUndo: handleUndo,
-            disabled:
-                Object.keys(pendingChanges).length === 0 ||
-                deleteMutation.isPending ||
-                updateMutation.isPending || createTileMutation.isPending
+            hasChanges: Object.keys(pendingChanges).length > 0,
+            isLoading: deleteMutation.isPending || updateMutation.isPending || createTileMutation.isPending
         });
-    }, [
-        pendingChanges,
-        handleSaveTiles,
-        handleUndo,
-        deleteMutation.isPending,
-        updateMutation.isPending,
-        createTileMutation.isPending
-    ]);
 
+        return () => registerActions({ 
+            onSave: async () => {}, 
+            onUndo: () => {}, 
+            hasChanges: false 
+        });
+    }, [pendingChanges, handleSaveTiles, handleUndo, registerActions, deleteMutation.isPending, updateMutation.isPending, createTileMutation.isPending]);
 
     return (
         <>

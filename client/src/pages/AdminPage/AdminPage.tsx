@@ -13,7 +13,7 @@ import { usersSchema } from "../../validation/userSchema";
 import {handleSuccessNotification,handleErrorNotification} from "../../constants/message"
 export function AdminPage() {
   const queryClient = useQueryClient();
-  const { setFooterActions } = useFooter();
+const { registerActions } = useFooter();
   const currentUser = useUser();
   
   const [selectedRole, setSelectedRole] = useState("all users");
@@ -59,31 +59,37 @@ export function AdminPage() {
 });
 
 
+const handleSave = useCallback(async () => {
+  const changesToSave = Object.values(pendingChanges);
+  if (changesToSave.length === 0) return;
+  
+  await updateUsersRoleMutation.mutateAsync(changesToSave);
+  
+}, [pendingChanges, updateUsersRoleMutation]);
 
-  const handleSave = useCallback(() => {
-    const changesToSave = Object.values(pendingChanges);
-    if (changesToSave.length === 0) return;
-    updateUsersRoleMutation.mutate(changesToSave);
-  }, [pendingChanges, updateUsersRoleMutation.mutate]);
+const handleUndo = useCallback(() => {
+  setPendingChanges({});
+}, []);
 
-  const handleUndo = useCallback(() => {
-    setPendingChanges({});
-  }, []);
+useEffect(() => {
+  registerActions({
+    onSave: handleSave,
+    onUndo: handleUndo,
+    hasChanges: Object.keys(pendingChanges).length > 0,
+    isLoading: updateUsersRoleMutation.isPending,
+  });
 
-  useEffect(() => {
-    setFooterActions({
-      onSave: handleSave,
-      onUndo: handleUndo, 
-      disabled: Object.keys(pendingChanges).length === 0 || updateUsersRoleMutation.isPending, 
-    });
-
-    return () => setFooterActions({ onSave: null, onUndo: null, disabled: false });
-  }, [pendingChanges, updateUsersRoleMutation.isPending, handleSave, handleUndo, setFooterActions]);
+  return () => registerActions({ 
+    onSave: async () => {}, 
+    onUndo: () => {}, 
+    hasChanges: false 
+  });
+}, [pendingChanges, updateUsersRoleMutation.isPending, handleSave, handleUndo, registerActions]);
 
   const handleRoleChange = (userId: string, newRole: User["role"]) => {
     const originalUser = users.find(u => u._id === userId);
-    if (!originalUser) return;
-
+    if (!originalUser) 
+      return;
     setPendingChanges(prev => ({
       ...prev,
       [userId]: { ...originalUser, role: newRole }
