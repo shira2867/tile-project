@@ -1,5 +1,4 @@
 
-import type { Color } from '../types/tile.type';
 import type { Tile, CreateTile } from '../types/tile.type';
 import { axiosInstance } from './manager.service';
 

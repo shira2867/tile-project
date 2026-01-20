@@ -2,14 +2,16 @@ export type LoginData ={
     email: string;
     password: string;
 }
-export const roles = [
-  "admin",
-  "moderator",
-  "editor",
-  "viewer",
-] as const
-export type Role = typeof roles[number];
 
+
+
+export enum Role {
+  Admin = "admin",
+  Moderator = "moderator",
+  Editor = "editor",
+  Viewer = "viewer",
+}
+export const roles = Object.values(Role);
 
 export type SignUpData= {
   name: string;
