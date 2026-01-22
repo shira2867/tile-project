@@ -58,6 +58,7 @@ export function authorizeRolesMiddleware(allowedRoles: string[])
 {
   return (req: AuthRequest, res: Response, next: NextFunction) => 
     {
+        console.log('req.user:', req.user);
     if (!req.user || typeof req.user === "string") 
     {
       return res.status(401).json({ message: "Unauthorized" });

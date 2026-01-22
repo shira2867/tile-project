@@ -5,7 +5,6 @@ import { loginUser } from "../../api/auth";
 import { LoginSchema } from "../../validation/authSchema";
 import type { LoginData } from "../../types/user.types";
 import style from './LoginPage.module.css';
-
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useState } from "react";
 import { getAvatarUri } from "../../utils/utils";
@@ -23,6 +22,7 @@ export default function LoginPage() {
         onSuccess: () => {
             navigate("/tiles");
         },
+   
     });
 
 
@@ -87,7 +87,7 @@ export default function LoginPage() {
                 )}
                 <div className={style.bottuns}>
                     <button className={style.submit} type="submit" disabled={LoginMutation.isPending}>
-                        {LoginMutation.isPending ? "Logging in..." : "LOGIN"}
+                        {LoginMutation.isPending ? "LOGIN..." : "LOGIN"}
                     </button>
 
                     <button className={style.bottun}

@@ -47,24 +47,20 @@ export async function createUser(userData: CreateUserInput) {
     return await user.save();
 }
 
-
 export async function loginUser(email: string, password: string) {
     const user = await User.findOne({ email });
     if (!user) {
         throw new Error('User not found');
     }
-
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
         throw new Error('Invalid password');
     }
-
     const token = jwt.sign(
         { _id: user._id,name:user.name, role: user.role, email:user.email }, 
         process.env.JWT_SECRET as string, 
         { expiresIn: '1d' } 
     );
-
     return { 
         token, 
         user: { id: user._id, name: user.name, role: user.role,email: user.email } 

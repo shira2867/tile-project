@@ -8,11 +8,7 @@ export const getAllUser = async ():Promise<User[]> => {
     );
     return res.data;
 };
-export const getUsersByRole = async (role: string): Promise<User[]> => {
-  const res = await axiosInstance.get(`users/getUserByRole/${role}`
-);
-  return res.data;
-};
+
 
 export const getUsersByEmail = async (email: string): Promise<User[]> => {
   const res = await axiosInstance.get(`users/getUserByEmail`, {

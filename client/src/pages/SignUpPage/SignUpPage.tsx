@@ -64,7 +64,7 @@ export default function SignUpPage() {
             {...formik.getFieldProps("name")}
           />
           {formik.touched.name && formik.errors.name && (
-  <p className={style.errorMessage}>{formik.errors.name}</p>
+          <p className={style.errorMessage}>{formik.errors.name}</p>
           )}
         </div>
 
