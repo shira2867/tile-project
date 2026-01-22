@@ -119,10 +119,11 @@ export function TilePage() {
       ) : isError ? (
         <div>אירעה שגיאה</div>
       ) : (
+        <div className={style.conteiner}>
         <div className={style.tilesContainer}>
           {displayTiles.map((tile) => (
             <TileComponent
-              key={`${tile._id}-${tile.color}`}
+              key={tile._id}
               _id={tile._id}
               color={tile.color}
               colors={colorOptions}
@@ -163,6 +164,7 @@ export function TilePage() {
               )}
             </div>
           )}
+        </div>
         </div>
       )}
 

@@ -18,8 +18,16 @@
 .cellname,
 .cellemail,
 .cellrole {
-  flex: 1;                   
+  flex: 1;  
+  text-align: center;
 }
+.cellrole
+{
+    text-align: end;
+
+}
+.cellname{text-align: left;
+margin-left: 20px;}
 
 .cellrole select {
   padding: 4px 6px;

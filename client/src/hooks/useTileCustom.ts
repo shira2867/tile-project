@@ -21,7 +21,7 @@ export function useTile() {
   const [pendingChanges, setPendingChanges] = useState<
     Record<string, PendingTile>
   >({});
-  const{
+  const {
     data: tiles = [],
     isLoading,
     isError,
@@ -40,21 +40,28 @@ export function useTile() {
         parseResult.data.map((tile) => updateTileColor(tile._id, tile.color)),
       );
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tiles"] });
+    onSuccess: (updatedTiles) => {
+      queryClient.setQueryData<Tile[]>(["tiles"], (old = []) =>
+        old.map((tile) => {
+          const updated = updatedTiles.find((t) => t._id === tile._id);
+          return updated ? { ...tile, ...updated } : tile;
+        }),
+      );
+
       setPendingChanges({});
       handleSuccessNotification("השינויים נשמרו בהצלחה!");
-    },
-    onError: (error) => {
-      console.error("Save failed:", error);
-      handleErrorNotification("אירעה שגיאה בשמירת הנתונים");
     },
   });
 
   const createTileMutation = useMutation({
     mutationFn: (newTile: CreateTile) => createTile(newTile),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tiles"] });
+
+    onSuccess: (createdTile) => {
+      queryClient.setQueryData<Tile[]>(["tiles"], (old = []) => [
+        ...old,
+        createdTile,
+      ]);
+
       setPendingChanges({});
       handleSuccessNotification("האריח נוצר בהצלחה!");
     },
@@ -66,9 +73,13 @@ export function useTile() {
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => deleteTile(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tiles"] });
+    onSuccess: ( deletedId) => {
+      queryClient.setQueryData<Tile[]>(["tiles"], (old = []) =>
+        old.filter((tile) => tile._id !== deletedId),
+      );
+
       setPendingChanges({});
+      handleSuccessNotification("האריח נמחק בהצלחה!");
     },
     onError: (error) => {
       console.error("Error deleting tile:", error);
