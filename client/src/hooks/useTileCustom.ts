@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Tile, CreateTile } from "../types/tile.type";
 import {
@@ -47,7 +47,6 @@ export function useTile() {
           return updated ? { ...tile, ...updated } : tile;
         }),
       );
-
       setPendingChanges({});
       handleSuccessNotification("השינויים נשמרו בהצלחה!");
     },
