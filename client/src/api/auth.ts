@@ -6,24 +6,24 @@ import { axiosInstance } from './manager.service';
 
 
 export const signUpUser = async (data: SignUpData) => {
-  const res = await axiosInstance.post(`users/signUp`, data);
+  const res = await axiosInstance.post(`auth/signUp`, data);
   return res.data;
 };
 export const loginUser = async (data: LoginData) => {
-  const res = await axiosInstance.post(`users/login`, data,
+  const res = await axiosInstance.post(`auth/login`, data,
    );
   return res.data;
 };
 
 export const getCurrentUser = async () => {
-  const { data } = await axiosInstance.get(`users/me`
+  const { data } = await axiosInstance.get(`auth/me`
 )
   return data
 }
 
 export const logout = async () => {
   try {
-    const { data } = await axiosInstance.get(`users/logout`
+    const { data } = await axiosInstance.get(`auth/logout`
     );
     console.log(data.message); 
     return data;

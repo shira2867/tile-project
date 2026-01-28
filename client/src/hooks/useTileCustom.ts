@@ -29,6 +29,8 @@ export function useTile() {
     queryKey: ["tiles"],
     queryFn: getAllTiles,
   });
+  console.log({ tiles });
+
   const updateMutation = useMutation({
     mutationFn: async (changes: Tile[]) => {
       const parseResult = tilesSchema.safeParse(changes);
@@ -72,7 +74,7 @@ export function useTile() {
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => deleteTile(id),
-    onSuccess: ( deletedId) => {
+    onSuccess: (deletedId) => {
       queryClient.setQueryData<Tile[]>(["tiles"], (old = []) =>
         old.filter((tile) => tile._id !== deletedId),
       );
