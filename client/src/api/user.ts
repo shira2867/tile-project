@@ -4,14 +4,14 @@ import { axiosInstance } from './manager.service';
 
 
 export const getAllUser = async ():Promise<User[]> => {
-    const res = await axiosInstance.get(`users/getAllUser`
+    const res = await axiosInstance.get(`users`
     );
     return res.data;
 };
 
 
 export const getUsersByEmail = async (email: string): Promise<User[]> => {
-  const res = await axiosInstance.get(`users/getUserByEmail`, {
+  const res = await axiosInstance.get(`users/ByEmail`, {
     params: { email }, 
   });
   return res.data;

@@ -3,7 +3,7 @@ import type { Tile, CreateTile } from '../types/tile.type';
 import { axiosInstance } from './manager.service';
 
 export const getAllTiles = async (): Promise<Tile[]> => {
-  const res = await axiosInstance.get('/tiles/getAllTiles');
+  const res = await axiosInstance.get('/tiles');
   return res.data;
 };
 

@@ -9,7 +9,7 @@ function App() {
   return (
     <UserProvider>
       <FooterProvider>
-       <TileRoutes></TileRoutes>
+       <TileRoutes/>
      </FooterProvider>
    </UserProvider>
   );
